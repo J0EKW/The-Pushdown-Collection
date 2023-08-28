@@ -1,38 +1,538 @@
-.App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.app {
+  text-align: justify;
+  color: rgb(0, 0, 0);
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+}
+
+.simWrapper {
+  display: flex;
+  flex-direction: row;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 150px;
+  width: 100vw;
+  border-style: solid;
+  border-width: 1px;
+  border-color: white;
+  background-color: rgb(44, 44, 44);
+}
+
+.simState {
+  display: flex;
+  flex-flow: column;
+  background-color: white;
+  border-radius: 20px;
+  margin: 10px;
+  color: black;
+  width: 170px;
+  padding: 10px;
+}
+
+.simStateWrapper {
+  overflow: auto;
+  flex: 1;
+  display: flex;
+  flex-flow: row;
+  flex-wrap: wrap;
+  /* border-style: solid;
+  border-width: 1px;
+  border-color: white; */
+}
+
+.inputsWrapper {
+  /* border-top: solid 1px white; */
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+}
+
+.simSetUpWrapper {
+  width: 200px;
+  /* border-style: solid;
+  border-width: 1px;
+  border-color: white; */
+}
+
+.simButtonsWrapper {
+  width: 40px;
+  display: flex;
+  flex-direction: column;
+  /* border-style: solid;
+  border-width: 1px;
+  border-color: white; */
+}
+
+#gui {
+  width: 100vw;
+  height: calc(100vh - 150px);
+  background-color: rgb(33, 33, 33);
+  transform-origin: center;
+}
+
+.guiState {
+  transform-origin: center;
+}
+
+.xAxis, .yAxis {
+  background-color: rgb(55, 55, 55);
+  transform-origin: center;
+}
+
+.simButton {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  font-size: 20px;
+  font-weight: 600;
+  border-style: solid;
+  border-width: 1px;
+  border-color: white;
+  background-color: transparent;
   color: white;
 }
 
-.App-link {
-  color: #61dafb;
+#container {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-self: center;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+#guiButtonsWrapper {
+  position: absolute;
+  left: calc((100vw / 2) - 152.5px);
+}
+
+.guiButton {
+  margin: 10px;
+  width: 30px;
+  height: 30px;
+  border-style: solid;
+  border-width: 1px;
+  border-color: white;
+  background-color: rgb(33, 33, 33);
+  color: white;
+}
+
+.clicked {
+
+  background-color: white;
+}
+
+.txtInternalWrapper, .optionsInternalWrapper {
+
+  display: flex;
+  flex-direction: column;
+}
+
+.optionsAnimWrapper {
+  width: 300px;
+  background-color: rgb(33, 33, 33);
+}
+
+.contextMenu {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  width: 150px;
+  border: solid 1px white;
+  background-color: rgb(44, 44, 44);
+}
+
+.reveal {
+  transform-origin: 0% 0%;
+  animation: revealAnimation ease;
+  animation-duration: 0.3s;
+}
+
+.contextMenuButton {
+  padding: 5px;
+  width: 100%;
+  color: white;
+  border: none;
+  text-align: left;
+  font-size: 15px;
+  background-color: rgb(44, 44, 44);
+}
+
+.contextMenuLabel {
+  padding: 5px 5px 2px;
+  text-align: left;
+  font-size: 15px;
+  width: 100%;
+  color: white;
+  border: none;
+  text-align: left;
+  display: flex;
+  flex-direction: row;
+}
+
+.contextMenuInput {
+  position: absolute;
+  left: 50%;
+  width: calc(50% - 15px);
+  border: none;
+  background-color: rgb(33, 33, 33);
+  color: white;
+}
+
+.contextMenuCheckBox {
+  position: absolute;
+  left: 80%;
+  background-color: rgb(33, 33, 33);
+}
+
+.contextMenuSelect {
+  position: absolute;
+  left: 65%;
+  border: none;
+  background-color: rgb(33, 33, 33);
+  color: white;
+}
+
+@keyframes revealAnimation {
+  0% {
+    transform: scaleY(0%)
   }
-  to {
-    transform: rotate(360deg);
+
+  100% {
+    transform: scaleY(100%)
+  }
+}
+
+#txtWrapper {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: flex;
+  flex-direction: row;
+  height: calc(100vh - 150px);
+}
+
+#optionsWrapper {
+  position: absolute;
+  right: 0;
+  top: 0;
+  display: flex;
+  flex-direction: row;
+  height: calc(100vh - 150px);
+}
+
+.collapse {
+  border-style: solid;
+  border-width: 1px;
+  border-color: white;
+  color: white;
+  background-color: rgb(44, 44, 44);
+  box-sizing: border-box;
+}
+
+.boxInput {
+  background-color: transparent;
+  border-style: solid;
+  border-width: 1px;
+  border-color: rgb(233, 233, 233);
+  color: rgb(44, 44, 44);;
+  box-sizing: border-box;
+  width: 25px;
+  height: 25px;
+  transition-duration: 0.2s;
+  margin: 1%;
+}
+
+.textInput {
+  background-color: transparent;
+  border-style: solid;
+  border-width: 1px;
+  border-color: white;
+  color: white;
+  box-sizing: border-box;
+  width: 65%;
+  transition-duration: 0.2s;
+  margin: 5px;
+}
+
+.boxSelect {
+  border-style: solid;
+  border-width: 1px;
+  border-color: transparent;
+  color: rgb(44, 44, 44);;
+  box-sizing: border-box;
+  background-color: transparent;
+  transition-duration: 0.2s;
+}
+
+.remove {
+  padding: 0%;
+  border-color: transparent;
+  color: rgb(44, 44, 44);
+  background-color: transparent;
+  transition-duration: 0.2s;
+  font-weight: 700;
+  font-size: x-large;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.add {
+  position: absolute;
+  top: 5px;
+  right: 10px;
+  padding: 0%;
+  margin: 0%;
+  border-color: transparent;
+  color: rgb(233, 233, 233);
+  background-color: transparent;
+  transition-duration: 0.2s;
+  font-weight: 700;
+  font-size: x-large;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.txtTransitionsWrapper {
+  position: relative;
+  width: 300px;
+  height: 50%;
+  border-top: solid;
+  border-left: solid;
+  border-right: solid;
+  border-width: 1px;
+  border-color: white;
+  box-sizing: border-box;
+  text-align: center;
+  display: flex;
+  flex-flow: column;
+  background-color: rgb(44, 44, 44);
+}
+
+.txtStatesWrapper {
+  position: relative;
+  width: 300px;
+  height: 50%;
+  border-bottom: solid;
+  border-left: solid;
+  border-right: solid;
+  border-width: 1px;
+  border-color: white;
+  box-sizing: border-box;
+  text-align: center;
+  display: flex;
+  flex-flow: column;
+  background-color: rgb(44, 44, 44);
+}
+
+.slideIn {
+  animation: slideInAnimation;
+  animation-duration: 0.7s;
+}
+
+.slideOut {
+  animation: slideOutAnimation;
+  animation-duration: 0.7s;
+}
+
+@keyframes slideInAnimation {
+  0% {
+    transform: translateX(-300px)
+  }
+
+  100% {
+    transform: translateX(0%)
+  }
+}
+
+@keyframes slideOutAnimation {
+  0% {
+    transform: translateX(0%)
+  }
+
+  100% {
+    transform: translateX(-300px)
+  }
+}
+
+.listWrapper {
+  overflow: auto;
+  flex: 1;
+  border-top: solid;
+  border-bottom: solid;
+  border-color: white;
+  border-width: 2px;
+  background-color: rgb(33, 33, 33);
+}
+
+/* .listWrapper::before {
+  content: '';
+    display: block;
+    position: absolute;
+    width: 100%;
+    height: 20px;
+    background-image: linear-gradient(to top, transparent, rgb(44, 44, 44));
+    pointer-events: none;
+}
+
+.listWrapper::after {
+  content: '';
+    display: block;
+    position: absolute;
+    bottom: 34px;
+    width: 100%;
+    height: 20px;
+    background-image: linear-gradient(to bottom, transparent, rgb(44, 44, 44));
+    pointer-events: none;
+} */
+
+.transition {
+  border-radius: 25px;
+  border-style: solid;
+  border-width: 1px;
+  margin: 5px;
+  height: 31px;
+  opacity: 1;
+  background-color: rgb(233, 233, 233);
+  vertical-align: middle;
+  transition: all 0.2s ease-in;
+}
+
+.txtState {
+  border-radius: 25px;
+  border-style: solid;
+  border-width: 1px;
+  margin: 5px;
+  height: 31px;
+  opacity: 1;
+  background-color: rgb(233, 233, 233);
+  vertical-align: middle;
+  transition: all 0.2s ease-in;
+}
+
+@keyframes fadeIn {
+  0% {
+    transform: scaleY(0%);
+    opacity: 0;
+  }
+
+  100% {
+    transform: scaleY(100%);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  0% {
+    transform: scaleY(100%);
+    opacity: 1;
+  }
+
+  100% {
+    transform: scaleY(0%);
+    opacity: 0;
+  }
+}
+
+.show {
+  transform-origin: top;
+  animation: fadeIn 0.2s
+}
+
+.hide {
+  transform-origin: top;
+  animation: fadeOut 0.2s
+}
+
+.highlighted {
+  font-weight: 800;
+  text-decoration: underline;
+}
+
+.simStateHistory {
+  overflow: auto;
+  white-space: nowrap;
+}
+
+.txtTransitionHeader, .txtStatesHeader {
+  text-align: left;
+  padding: 0;
+  margin: 10px;
+  font-weight: 700;
+  font-size: larger;
+  background-color: rgb(44, 44, 44);
+}
+
+.simLabel {
+  text-align: left;
+  margin-left: 10px;
+  font-weight: 700;
+}
+
+.fail {
+  background-color: rgb(255, 128, 128);
+}
+
+.success {
+  background-color: rgb(128, 255, 128);
+}
+
+.pulse {
+  animation-name: pulse-animation;
+  animation-duration: 1.5s;
+  transform-origin: center;
+}
+
+.pulseSuccess {
+  animation-name: pulse-animation-success;
+  animation-duration: 1.5s;
+  transform-origin: center;
+}
+
+.pulseFailure {
+  animation-name: pulse-animation-failure;
+  animation-duration: 1.5s;
+  transform-origin: center;
+}
+
+@keyframes pulse-animation {
+  0% {
+    stroke: rgba(0, 128, 128, 1);
+    stroke-width: 5%;
+    transform: scale(10%);
+  }
+  50% {
+    stroke: rgba(0, 128, 128, 0);
+    transform: scale(200%);
+    stroke-width: 0%;
+  }
+  100% {
+    stroke: rgba(255, 255, 255, 0);
+    transform: scale(200%);
+  }
+}
+
+@keyframes pulse-animation-success {
+  0% {
+    stroke: none;
+    fill: rgba(0, 160, 0, 1);
+    transform: scale(10%);
+  }
+  100% {
+    stroke: none;
+    fill: rgba(0, 160, 0, 0);
+    transform: scale(200%);
+  }
+}
+
+@keyframes pulse-animation-failure {
+  0% {
+    stroke: none;
+    transform: scale(10%);
+    fill: rgba(160, 0, 0, 1);
+  }
+  100% {
+    stroke: none;
+    fill: rgba(160, 0, 0, 0);
+    transform: scale(200%);
   }
 }
