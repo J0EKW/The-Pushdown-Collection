@@ -40,6 +40,10 @@ const stackUpdate = (a: string, b: string, wildCard: string): string => {
 }
 
 const stackLengthGreaterThan = (stacks: string[], stackCount: number, value: number): boolean => {
+  if (stackCount === 0) {
+    return true
+  }
+
   let response = false
     stacks.forEach((x, i) => {
         if (i < stackCount && x.length > value) {
@@ -118,7 +122,7 @@ export const Step = (transitions: Transition[], input: string, traversal: Traver
     let tempId = traversal[traversal.length - 1].id + 1
     let newTraversals: Traversal[] = []
     let completeTraversals: Traversal[] = []
-
+    console.log(traversal)
     traversal.forEach((x, i) => {
 
       if (x.end === 0) {
@@ -154,8 +158,15 @@ export const Step = (transitions: Transition[], input: string, traversal: Traver
               stackHead[stIndex] = x.stack[stIndex][last]
             }
           }
-
+          console.log(transitions)
           let transitionOptions = transitions.filter(transition => {
+            console.log(stackCount)
+            if (stackCount === 0) {
+              return (
+                transition.cStateId === x.stateId &&
+                (transition.cInput === input[x.inputHead] || transition.cInput === "*")
+              )
+            }
 
             return (
               transition.cStateId === x.stateId &&
@@ -182,7 +193,7 @@ export const Step = (transitions: Transition[], input: string, traversal: Traver
               x.stack.forEach((s, i) => {
                   newStacks[i] = stackUpdate(s, transition.nStack[i], wildCard)
               })
-
+              console.log(transition)
               newTraversals.push({
                   id: tempId,
                   history: [...x.history,  x.stateId],
@@ -266,7 +277,7 @@ export const animate = (traversals: Traversal[], connections: Connection[], stat
       travAnim.setAttribute('cy', '-50');
       travAnim.setAttribute('id', String("travAnim" + i));
       travAnim.setAttribute('className', 'travAnim');
-      travAnim.setAttribute('stroke', 'white');
+      travAnim.setAttribute('stroke', 'var(--border-colour)');
       travAnim.style.setProperty('animation-delay', String(i * 10 / speed) + "s")
 
       if (i % 4 === 0) {
@@ -283,10 +294,9 @@ export const animate = (traversals: Traversal[], connections: Connection[], stat
       }
 
       if (i % 8 < 4) {
-        travAnim.setAttribute('fill', 'white');
+        travAnim.setAttribute('fill', 'var(--border-colour)');
       } else {
-        travAnim.setAttribute('fill', 'rgb(33, 33, 33)');
-        travAnim.setAttribute('stroke-width', String(5 * (scale / 100)))
+        travAnim.setAttribute('fill', 'var(--back-colour-primary-1)');
       }
 
       let firstState = document.getElementById('guiState' + states[0].id)

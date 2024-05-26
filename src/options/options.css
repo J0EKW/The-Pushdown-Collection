@@ -1,6 +1,35 @@
 
-.optionsInternalWrapper {
-  background-color: rgb(44, 44, 44);
+.light {
+  --border-colour: rgb(0, 0, 0);
+  --text-colour-primary: rgb(0, 0 ,0);
+  --text-colour-secondary: rgb(255, 255, 255);
+  --back-colour-primary-1: rgb(230, 230, 230);
+  --back-colour-primary-2: rgb(200, 200, 200);
+  --back-colour-primary-3: rgb(170, 170, 170);
+  --back-colour-secondary: rgb(200, 0, 200);
+}
+.dark {
+  --border-colour: rgb(222, 222, 222);
+  --text-colour-primary: rgb(255, 255, 255);
+  --text-colour-secondary: rgb(0, 0, 0);
+  --back-colour-primary-1: rgb(33, 33, 33);
+  --back-colour-primary-2: rgb(44, 44, 44);
+  --back-colour-primary-3: rgb(55, 55, 55);
+  --back-colour-secondary: rgb(222, 0, 222);
+}
+
+.contrast {
+  --border-colour: rgb(255, 255, 255);
+  --text-colour-primary: rgb(255, 255, 255);
+  --text-colour-secondary: rgb(0, 0, 0);
+  --back-colour-primary-1: rgb(0, 0, 0);
+  --back-colour-primary-2: rgb(0, 0, 0);
+  --back-colour-primary-3: rgb(0, 0, 0);
+  --back-colour-secondary: rgb(255, 255, 255);
+}
+
+#optionsInternalWrapper {
+  background-color: var(--back-colour-primary-2);
   width: 300px;
   margin-right: 0px;
   transition-duration: 0.7s;
@@ -18,24 +47,26 @@
   margin: 0;
   font-weight: 700;
   font-size: larger;
-  background-color: rgb(44, 44, 44);
-  border: solid white 2px;
+  color: var(--text-colour-primary);
+  background-color: var(--back-colour-primary-2);
+  border: solid var(--border-colour) 2px;
 }
 
 .optionFooter {
-  border-top: solid white 2px;
+  border-top: solid var(--border-colour) 2px;
   padding: 10px;
   margin: 0;
-  background-color: rgb(44, 44, 44);
+  background-color: var(--back-colour-primary-2);
 }
 
 .options {
   padding: 10px;
-  background-color: rgb(33, 33, 33);
+  background-color: var(--back-colour-primary-1);
   transition-duration: 0.7s;
 }
 
 .options * {
+  color: var(--text-colour-primary);
   transition-duration: 0.7s;
   height: 40px;
   vertical-align: middle;
@@ -50,12 +81,20 @@
   height: 0px
 }
 
+.options.open {
+  padding: 0px 10px;
+}
+
+.options.open *  {
+  height: 40px
+}
+
 .optionsBoxInput {
   background-color: transparent;
   border-style: solid;
   border-width: 1px;
-  border-color: rgb(233, 233, 233);
-  color: rgb(233, 233, 233);
+  border-color: var(--border-colour);
+  color: var(--text-colour-primary);
   box-sizing: border-box;
   width: 25px;
   height: 25px;
@@ -65,8 +104,8 @@
 .optionsSelect {
   border-style: solid;
   border-width: 1px;
-  border-color: white;
-  color: rgb(233, 233, 233);
+  border-color: var(--border-colour);
+  color: var(--text-colour-primary);
   box-sizing: border-box;
   background-color: transparent;
   margin: 1%;
@@ -75,9 +114,9 @@
 .reset {
   margin: 1%;
   padding: 0%;
-  border: solid rgb(233, 233, 233) 2px;
-  background-color: rgb(44, 44, 44);
-  color: rgb(233, 233, 233);
+  border: solid var(--border-colour) 2px;
+  background-color: var(--back-colour-primary-2);
+  color: var(--text-colour-primary);
   width: 25px;
   height: 25px;
   transition-duration: 0.2s;
@@ -85,4 +124,64 @@
   font-size: medium;
   text-align: center;
   vertical-align: middle;
+}
+
+.slideLeft {
+  animation: slideLeftAnimation;
+  animation-duration: 0.7s;
+}
+
+.slideRight {
+  animation: slideRightAnimation;
+  animation-duration: 0.7s;
+}
+
+.slideDown {
+  animation: slideDownAnimation;
+  animation-duration: 0.7s;
+}
+
+.slideUp {
+  animation: slideUpAnimation;
+  animation-duration: 0.7s;
+}
+
+@keyframes slideLeftAnimation {
+  0% {
+    transform: translateX(300px)
+  }
+
+  100% {
+    transform: translateX(0px)
+  }
+}
+
+@keyframes slideRightAnimation {
+  0% {
+    transform: translateX(0px)
+  }
+
+  100% {
+    transform: translateX(300px)
+  }
+}
+
+@keyframes slideDownAnimation {
+  0% {
+    transform: translateY(-100%)
+  }
+
+  100% {
+    transform: translateY(0%)
+  }
+}
+
+@keyframes slideUpAnimation {
+  0% {
+    transform: translateY(0%)
+  }
+
+  100% {
+    transform: translateY(-100%)
+  }
 }

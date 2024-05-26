@@ -2,6 +2,7 @@ import React, { useEffect } from 'react'
 import { Connection, State, Transition, Traversal } from '../types';
 
 type GuiConnectionProps = {
+  colour: String,
   connection: Connection,
   cState: State,
   nState: State,
@@ -67,11 +68,11 @@ export const GuiConnection = (props: GuiConnectionProps) => {
       document.getElementById('path' + connection.id)?.setAttribute('d', pathD)
 
       return (
-        <svg id={'connection' + connection.id}>
-          <path id={'path' + connection.id} d={pathD} markerEnd='url(#head)' stroke="rgb(128, 128, 128)" strokeWidth={String(props.scale * 10)} fill="none"/>
+        <svg id={'connection' + connection.id} className='connection'>
+          <path id={'path' + connection.id} d={pathD} markerEnd={connection.cStateId !== connection.nStateId ? 'url(#head)' : ''} strokeWidth={String(props.scale * 10)}/>
           {props.transitions.map((y, i) => {
                 return(
-                  <text id={'guiTransition' + y.id} filter={active.find(a => a.transitionId === y.id) ? "url(#active)" : "url(#solid)"} key={y.id} x={adaptedCX + (adaptedNX - adaptedCX) / 2} y={textY - (i * 25 * props.scale)} fill='white' fontSize={String(20 * props.scale)} textAnchor='middle'>
+                  <text id={'guiTransition' + y.id} className={active.find(a => a.transitionId === y.id) ? 'activeText' : 'nonactiveText'} filter={active.find(a => a.transitionId === y.id) ? "url(#active)" : "url(#solid)"} key={y.id} x={adaptedCX + (adaptedNX - adaptedCX) / 2} y={textY - (i * 25 * props.scale)} fontSize={String(20 * props.scale)} textAnchor='middle'>
                     <tspan >
                       {y.cInput + stacksString(props.stackCount, y)
                     }</tspan>

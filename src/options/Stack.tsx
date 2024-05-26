@@ -1,9 +1,12 @@
 import { useContext, useEffect, useState } from "react"
 import '../App.css';
-import './options.css';
 import { OptionContext, OptionDispatchContext } from "../lib/OptionsContext";
 
-export const Stack = () => {
+type StackProps = {
+    colour: String
+}
+
+export const Stack = (props: StackProps) => {
     const [collapse, setCollapse] = useState<boolean>(true)
     const [render, setRender] = useState<boolean>(false)
     const [to, setTo] = useState<NodeJS.Timeout>()
@@ -15,7 +18,7 @@ export const Stack = () => {
 
     const updateVisiblity = () => {
         if (!collapse) {
-            document.getElementById('stackOptionList')?.setAttribute('class', 'options close')
+            document.getElementById('stackOptionList')?.setAttribute('class', props.colour + ' options close')
             setTo(setTimeout(() => {
                 setRender(false)
             }, 690))
@@ -23,7 +26,7 @@ export const Stack = () => {
             setRender(true)
             clearTimeout(to)
             setTimeout(() => {
-                document.getElementById('stackOptionList')?.setAttribute('class', 'options')
+                document.getElementById('stackOptionList')?.setAttribute('class', props.colour + ' options')
             }, 1)
         }
         setCollapse(!collapse)
@@ -39,24 +42,13 @@ export const Stack = () => {
         }
     }
 
-    const handleBookendStack = () => {
-        dispatch({
-            type: 'set',
-            id: 'bookendStack',
-            value: !options['bookendStack'].value
-        })
-    }
-
     return (
         <div id='stackOptionWrapper'>
-            <h1 className='optionHeader' onClick={() => {updateVisiblity()}}>{'Stack' + (collapse ? ' ▼' : ' ▲')}</h1>
+            <h1 className={props.colour + ' optionHeader'} onClick={() => {updateVisiblity()}}>{'Stack' + (collapse ? ' ▼' : ' ▲')}</h1>
             {render && 
-            <div id='stackOptionList' className='options close'>
-                <div id='bookendWrapper'>
-                    Bookend Stack <input type='checkbox' checked={options['bookendStack'].value} onClick={handleBookendStack} />
-                </div>
+            <div id='stackOptionList' className={props.colour + ' options close'}>
                 <div id='charWrapper'>
-                    Char <input className='optionsBoxInput' type='text' max={1} value={char} onChange={(x) => {setChar(x.currentTarget.value)}} onKeyDown={(e) => handleChar(e)}/>
+                    Char <input className={props.colour + ' optionsBoxInput'} type='text' maxLength={1} value={char} onChange={(x) => {setChar(x.currentTarget.value)}} onKeyDown={(e) => handleChar(e)}/>
                 </div>
             </div>}
         </div>

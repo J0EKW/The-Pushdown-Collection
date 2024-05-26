@@ -11,7 +11,6 @@ const base = {
     bookendInput: false,
     inputFrontChar: 'S',
     inputEndChar: 'E',
-    bookendStack: true,
     stackFrontChar: 'Z',
     colourScheme: window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 1 : 0,
     textSize: 1
@@ -42,7 +41,6 @@ DefaultOptions['enableAlternating']  = newOption<boolean>(base.enableAlternating
 DefaultOptions['forceVisibly']       = newOption<boolean>(base.forceVisibly)
 DefaultOptions['haltCondition']      = newOption<boolean>(base.haltCondition)
 DefaultOptions['bookendInput']       = newOption<boolean>(base.bookendInput)
-DefaultOptions['bookendStack']       = newOption<boolean>(base.bookendStack)
 
 
 export default DefaultOptions

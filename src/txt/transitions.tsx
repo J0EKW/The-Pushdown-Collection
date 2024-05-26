@@ -8,6 +8,7 @@ type TransitionsProps = {
     transitions: Transition[],
     states: State[],
     stackCount: number,
+    colour: string,
     onRemove: Function,
     onCInputUpdate: Function,
     onCStateUpdate: Function,
@@ -23,7 +24,7 @@ export const Transitions = (props: TransitionsProps) => {
     let states = props.states
 
     const removeTransition = (id: number) => {
-        document.getElementById('transition' + id)?.setAttribute('class', 'transition hide')
+        document.getElementById('transition' + id)?.setAttribute('class', props.colour + 'transition hide')
         let children = document.getElementById('transition' + id)?.children
         if (children !== undefined) {
             for (let index = 0; index < children.length; index++) {
@@ -54,6 +55,7 @@ export const Transitions = (props: TransitionsProps) => {
             index={i}
             cState={cState}
             nState={nState}
+            colour={props.colour}
             stackCount={props.stackCount}
             onRemove={(id: number) => {removeTransition(id)}}
             onCInputUpdate={(id: number, value: string) => {props.onCInputUpdate(id, value)}}
@@ -67,9 +69,9 @@ export const Transitions = (props: TransitionsProps) => {
     })
 
     return (
-        <div className='txtTransitionsWrapper'>
-            <h1 className='txtTransitionHeader'>Transitions <button className='add' title={'Add new transition'} onClick={() => {addTransition()}}>+</button></h1>
-            <div className='listWrapper'>
+        <div className={props.colour + ' txtTransitionsWrapper'}>
+            <h1 className={props.colour + ' txtTransitionHeader'}>Transitions <button className={props.colour + ' add'} title={'Add new transition'} onClick={() => {addTransition()}}>+</button></h1>
+            <div className={props.colour + ' listWrapper'}>
                 {elems}
             </div>
         </div>

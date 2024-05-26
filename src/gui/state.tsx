@@ -2,6 +2,7 @@ import React from 'react'
 import { State, Traversal } from '../types'
 
 type GuiStateProps = {
+    colour: String,
     width: number,
     height: number,
     state: State,
@@ -18,20 +19,20 @@ export const GuiState = (props: GuiStateProps) => {
 
     if (state.alternating) {
         return(
-        <svg id={'guiState' + state.id} className={'guiState'} x={"50%"} y={"50%"} width={'200px'} height={'200px'} transform={"translate(" + (((state.x - 100) * props.scale) - props.offset.x) + ", " + (((state.y - 100) * props.scale) - props.offset.y) + ") scale(" + props.scale + ")"} >
-            {state.accepting && <circle id={'accept' + state.id} className='draggable svg' cx={"50%"} cy={"50%"} r={"26"} stroke="white" strokeWidth="3%" fill="transparent"/>}
-            {state.initial && <path id={'start' + state.id} d={"M0,40 L20,60 L0,80, Z"} stroke="white" strokeWidth="0%" fill="white"/>}
-            <circle id={'StateCircle' + state.id} className='draggable svg' cx={"50%"} cy={"50%"} r={'20%'} stroke="white" strokeWidth="3%" fill="white"/>
-            <text className='svg' x={"50%"} y={"50%"} fill='black' fontSize='30' textAnchor='middle' transform={"translate(0, 8)"}>{state.name}</text>
+        <svg id={'guiState' + state.id} className={'universal guiState'} x={"50%"} y={"50%"} width={'200px'} height={'200px'} transform={"translate(" + (((state.x - 100) * props.scale) - props.offset.x) + ", " + (((state.y - 100) * props.scale) - props.offset.y) + ") scale(" + props.scale + ")"} >
+            {state.accepting && <rect id={'accept' + state.id} className={'alternating draggable svg'} x={"30%"} y={"30%"} width={"40%"} height={"40%"} strokeWidth="1%"/>}
+            {state.initial && <path id={'start' + state.id} className={'initial'} d={"M20,70 L60,100 L20,130, Z"} strokeWidth="0%"/>}
+            <rect id={'StateCircle' + state.id} className={'stateCircle draggable svg ' + (target === true ? 'target' : 'nontarget')} x={"33%"} y={"33%"} width={"34%"} height={"34%"} strokeWidth="1%"/>
+            <text className={props.colour + ' svg '+ (target === true ? 'activeText' : 'nonactiveText')} x={"50%"} y={"50%"} fontSize='30' textAnchor='middle' transform={"translate(0, 8)"}>{state.name}</text>
         </svg>
         )
     }
     return (
-        <svg id={'guiState' + state.id} className={'guiState'} x={"50%"} y={"50%"} width={'200px'} height={'200px'} transform={"translate(" + ((state.x - 100) * props.scale - props.offset.x) + ", " + (((state.y - 100) * props.scale - props.offset.y)) + ") scale(" + props.scale + ")"} >
-            {state.accepting && <circle id={'accept' + state.id} className='draggable svg' cx={"50%"} cy={"50%"} r={"26%"} stroke="white" strokeWidth="1%" fill="transparent"/>}
-            {state.initial && <path id={'start' + state.id} d={"M20,70 L60,100 L20,130, Z"} stroke="white" strokeWidth="0%" fill="white"/>}
-            <circle id={'stateCircle' + state.id} className='draggable svg' cx={"50%"} cy={"50%"} r={'20%'} stroke="white" strokeWidth="1%" fill={target ? "rgb(0, 100, 100)" : "rgb(44, 44, 44)"}/>
-            <text className='svg' x={"50%"} y={"50%"} fill='white' fontSize='30' textAnchor='middle' transform={"translate(0, 8)"}>{state.name}</text>
+        <svg id={'guiState' + state.id} className={'existential guiState'} x={"50%"} y={"50%"} width={'200px'} height={'200px'} transform={"translate(" + ((state.x - 100) * props.scale - props.offset.x) + ", " + (((state.y - 100) * props.scale - props.offset.y)) + ") scale(" + props.scale + ")"} >
+            {state.accepting && <circle id={'accept' + state.id} className={'alternating draggable svg'} cx={"50%"} cy={"50%"} r={"26%"} strokeWidth="1%"/>}
+            {state.initial && <path id={'start' + state.id} className={'initial'} d={"M20,70 L60,100 L20,130, Z"} strokeWidth="0%"/>}
+            <circle id={'stateCircle' + state.id} className={'stateCircle draggable svg ' + (target === true ? 'target' : 'nontarget')} cx={"50%"} cy={"50%"} r={'20%'} strokeWidth="1%"/>
+            <text className={props.colour + ' svg ' + (target === true ? 'activeText' : 'nonactiveText')} x={"50%"} y={"50%"} fontSize='30' textAnchor='middle' transform={"translate(0, 8)"}>{state.name}</text>
         </svg>
   )
 }

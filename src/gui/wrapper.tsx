@@ -9,6 +9,7 @@ import { CMTransition } from '../contextMenu/transition'
 import { TweenLite, gsap } from 'gsap'
 
 type GuiWrapperProps = {
+    colour: String,
     states: State[],
     transitions: Transition[],
     connections: Connection[],
@@ -202,7 +203,6 @@ export const GuiWrapper = (props: GuiWrapperProps) => {
         }
       }
   
-      let maxViewSquare = 100
       const drag = (evt:React.MouseEvent<SVGSVGElement, MouseEvent>) => {
         let coord = getMousePosition(evt);
         if (props.interactMode === 2 && firstState !== undefined) {
@@ -247,8 +247,6 @@ export const GuiWrapper = (props: GuiWrapperProps) => {
             if (guiState) {
               let adaptedX = ((firstState.x) * (newScale / 100)) + ((wrapper ? wrapper.clientWidth : window.innerWidth) / 2) + offset.x
               let adaptedY = ((firstState.y) * (newScale / 100)) + ((wrapper ? wrapper.clientHeight : window.innerHeight - 150) / 2) + offset.y
-              /* let adaptedX = ((firstState.x) * (newScale / 100)) + offset.x
-              let adaptedY = ((firstState.y) * (newScale / 100)) + offset.y */
               setTempX(adaptedX)
               setTempY(adaptedY)
               setMouseX(e.pageX)
@@ -325,8 +323,8 @@ export const GuiWrapper = (props: GuiWrapperProps) => {
 
     return (
       <>
-      <GuiButtons interactMode={props.interactMode} onInteractModeUpdate={(value: number) => {props.onInteractModeUpdate(value)}} />
-        <svg id='gui' className='gui' onMouseMove={(e) => drag(e)} onMouseUp={() => setSelected(-1)} onMouseDown={(e:React.MouseEvent) => handleMouseDown(e)} onContextMenu={(e:any) => {contextMenu(e)}}>
+      <GuiButtons colour={props.colour} interactMode={props.interactMode} onInteractModeUpdate={(value: number) => {props.onInteractModeUpdate(value)}} />
+        <svg id='gui' className={props.colour + ' gui'} onMouseMove={(e) => drag(e)} onMouseUp={() => setSelected(-1)} onMouseDown={(e:React.MouseEvent) => handleMouseDown(e)} onContextMenu={(e:any) => {contextMenu(e)}}>
           <defs>
             <marker 
               id='head' 
@@ -336,35 +334,25 @@ export const GuiWrapper = (props: GuiWrapperProps) => {
               refX='6'
               refY='3'
             >
-              <path d='M0,0 V6 L5,3 Z' fill="rgb(128, 128, 128)" />
+              <path d='M0,0 V6 L5,3 Z' className={'arrow'}/>
             </marker>
-            <marker 
-                id='start' 
-                orient="auto" 
-                markerWidth='10' 
-                markerHeight='10' 
-                refX='0' 
-                refY='0'
-              >
-                <path d='M0,0 L50,100 Z' stroke='white' strokeWidth='5px' fill='white'/>
-              </marker>
             <filter x="0" y="0" width="1" height="1" id="solid">
-                <feFlood floodColor="rgb(44, 44, 44)" result="bg" />
+                <feFlood result="bg" />
                 <feMerge>
                   <feMergeNode in="bg"/>
                   <feMergeNode in="SourceGraphic"/>
                 </feMerge>
               </filter>
               <filter x="0" y="0" width="1" height="1" id="active">
-                <feFlood floodColor="rgb(0, 100, 100)" result="bg" />
+                <feFlood result="bg" />
                 <feMerge>
                   <feMergeNode in="bg"/>
                   <feMergeNode in="SourceGraphic"/>
                 </feMerge>
               </filter>
           </defs>
-          <rect className='xAxis' y={'50%'} width={'100vw'} height={'5px'} transform={"translate(0, " + -position.y + ") scale(1, " + scale / 100 + ")"} fill={'rgb(55, 55, 55)'} />
-          <rect className='yAxis' x={'50%'} width={'5px'} height={'100vh'} transform={"translate(" + -position.x + ", 0) scale(" + scale / 100 + ", 1)"} fill={'rgb(55, 55, 55)'}/>
+          <rect className={'xAxis'} y={'50%'} width={'100vw'} height={'5px'} transform={"translate(0, " + -position.y + ") scale(1, " + scale / 100 + ")"} />
+          <rect className={'yAxis'} x={'50%'} width={'5px'} height={'100vh'} transform={"translate(" + -position.x + ", 0) scale(" + scale / 100 + ", 1)"} />
           {firstState && <path d={'M ' + String(tempX) + ',' + String(tempY) + ' L ' + String(mouseX) + ',' + String(mouseY)} stroke="white" strokeWidth={String(scale / 10) + 'px'} fill='none'/>}
           {connections.map((x, i) => {
               let cState = states.find(s => s.id === x.cStateId)
@@ -373,22 +361,24 @@ export const GuiWrapper = (props: GuiWrapperProps) => {
               if (cState !== undefined && nState !== undefined) {
                 let mirror = findMirrorConnections(cState.id, nState.id, connections)
                 return (
-                  <GuiConnection key={x.id} connection={x} cState={cState} nState={nState} transitions={transitions} stackCount={props.stackCount} mirror={mirror} scale={scale / 100} offset={position} width={wrapper ? wrapper.clientWidth : window.innerWidth} height={wrapper ? wrapper.clientHeight : window.innerHeight} traversals={props.traversals} />
+                  <GuiConnection colour={props.colour} key={x.id} connection={x} cState={cState} nState={nState} transitions={transitions} stackCount={props.stackCount} mirror={mirror} scale={scale / 100} offset={position} width={wrapper ? wrapper.clientWidth : window.innerWidth} height={wrapper ? wrapper.clientHeight : window.innerHeight} traversals={props.traversals} />
                 )
               }
             })}
             {states.map((x, i) => {
                 return (
-                  <GuiState key={x.id} state={x} width={wrapper ? wrapper.clientWidth : window.innerWidth} height={wrapper ? wrapper.clientHeight : window.innerHeight} scale={scale / 100} offset={position}  onStatePosUpdate={(id: number, x: number, y: number) => {props.onStatePosUpdate(id, x, y)}} traversals={props.traversals}/>
+                  <GuiState colour={props.colour} key={x.id} state={x} width={wrapper ? wrapper.clientWidth : window.innerWidth} height={wrapper ? wrapper.clientHeight : window.innerHeight} scale={scale / 100} offset={position}  onStatePosUpdate={(id: number, x: number, y: number) => {props.onStatePosUpdate(id, x, y)}} traversals={props.traversals}/>
                 )
             
             })}
         </svg>
         {noneContextMenu && <CMNone
+            colour={props.colour} 
             left={contextMenuPos.x}
             top={contextMenuPos.y}
             onAddState={() => {addState(contextMenuPos.x, contextMenuPos.y)}}/>}
         {stateContextMenu && <CMState
+            colour={props.colour} 
             left={contextMenuPos.x}
             top={contextMenuPos.y}
             state={cmState}
@@ -398,6 +388,7 @@ export const GuiWrapper = (props: GuiWrapperProps) => {
             onAcceptUpdate={(id: number, value: boolean) => {props.onAcceptUpdate(id, value)}}
             onAlternateUpdate={(id: number, value: boolean) => {props.onAlternateUpdate(id, value)}}/>}
         {transitionContextMenu && <CMTransition 
+            colour={props.colour} 
             left={contextMenuPos.x}
             top={contextMenuPos.y}
             transition={cmTransition}

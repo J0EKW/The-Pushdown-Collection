@@ -1,11 +1,14 @@
 import React from 'react'
 import { Connection, Transition } from '../types'
+import { useContext } from "react"
+import { OptionContext } from "../lib/OptionsContext";
 
 export const add = (connections: Connection[], cStateId: number, nStateId: number, transitionId: number): Connection[] => {
     let id = 0
     if (connections.length > 0) {
         id = connections[connections.length - 1].id + 1
     }
+
     connections.push({
         id: id,
         cStateId: cStateId,

@@ -3,6 +3,7 @@ import { Transition } from "../types";
 import { OptionContext } from "../lib/OptionsContext";
 
 type CMTransitionProps = {
+    colour: String,
     top: number,
     left: number,
     transition: Transition,
@@ -77,27 +78,27 @@ export const CMTransition = (props: CMTransitionProps) => {
     }, [props.nState])
 
     return (
-        <div id='transitionContextMenu' className='contextMenu reveal' style={{left: props.left, top: props.top}} >
-            <div className='contextMenuLabel'>cState <input className='contextMenuInput' type='text' value={cState} onChange={(e) => setCState(e.currentTarget.value)} onKeyDown={(e) => handleCState(e)}/></div>
-            <div className='contextMenuLabel'>cInput <input className='contextMenuInput' type='text' value={cInput} maxLength={1} onChange={(e) => setCInput(e.currentTarget.value)} onKeyDown={(e) => handleCInput(e)}/></div>
+        <div id='transitionContextMenu' className={props.colour + ' contextMenu reveal'} style={{left: props.left, top: props.top}} >
+            <div className={props.colour + ' contextMenuLabel'}>cState <input className={props.colour + ' contextMenuInput'} type='text' value={cState} onChange={(e) => setCState(e.currentTarget.value)} onKeyDown={(e) => handleCState(e)}/></div>
+            <div className={props.colour + ' contextMenuLabel'}>cInput <input className={props.colour + ' contextMenuInput'} type='text' value={cInput} maxLength={1} onChange={(e) => setCInput(e.currentTarget.value)} onKeyDown={(e) => handleCInput(e)}/></div>
             {props.transition.cStack.map((x, i) => {
                 if (i < options['stackCount'].value) {
-                    return(<div key={i} className='contextMenuLabel'>{'cStack ' + String(i + 1)} <input className='contextMenuInput' type='text' value={cStack[i]}  maxLength={1} onChange={(e) => updateCStack(e.currentTarget.value, i)} onKeyDown={(e) => handleCStack(e, i)}/></div>)
+                    return(<div key={i} className={props.colour + ' contextMenuLabel'}>{'cStack ' + String(i + 1)} <input className='contextMenuInput' type='text' value={cStack[i]}  maxLength={1} onChange={(e) => updateCStack(e.currentTarget.value, i)} onKeyDown={(e) => handleCStack(e, i)}/></div>)
                 }
             })}
-            <div className='contextMenuLabel'>nState <input className='contextMenuInput' type='text' value={nState} onChange={(e) => setNState(e.currentTarget.value)} onKeyDown={(e) => handleNState(e)}/></div>
+            <div className='contextMenuLabel'>nState <input className={props.colour + ' contextMenuInput'} type='text' value={nState} onChange={(e) => setNState(e.currentTarget.value)} onKeyDown={(e) => handleNState(e)}/></div>
             {props.transition.nStack.map((x, i) => {
                 if (i < options['stackCount'].value) {
-                    return(<div key={i} className='contextMenuLabel'>{'nStack ' + String(i + 1)} <input className='contextMenuInput' type='text' value={nStack[i]}  maxLength={2} onChange={(e) => updateNStack(e.currentTarget.value, i)} onKeyDown={(e) => handleNStack(e, i)}/></div>)
+                    return(<div key={i} className={props.colour + ' contextMenuLabel'}>{'nStack ' + String(i + 1)} <input className='contextMenuInput' type='text' value={nStack[i]}  maxLength={2} onChange={(e) => updateNStack(e.currentTarget.value, i)} onKeyDown={(e) => handleNStack(e, i)}/></div>)
                 }
             })}
-            <div className='contextMenuLabel'>nInputHead
-            <select className='contextMenuSelect' value={props.transition.nInputHead} onChange={(e) => props.onNInputHeadUpdate(props.transition.id, Number(e.currentTarget.value))}>
+            <div className={props.colour + ' contextMenuLabel'}>nInputHead
+            <select className={props.colour + ' contextMenuSelect'} value={props.transition.nInputHead} onChange={(e) => props.onNInputHeadUpdate(props.transition.id, Number(e.currentTarget.value))}>
                 <option key={-1} value={-1}>-1</option>
                 <option key={0} value={0}>0</option>
                 <option key={1} value={1}>+1</option>
             </select></div>
-            <input className='contextMenuButton' type='button' value='Remove' onClick={() => {props.onRemove(props.transition.id)}}/>
+            <input className={props.colour + ' contextMenuButton'} type='button' value='Remove' onClick={() => {props.onRemove(props.transition.id)}}/>
         </div>
     )
 }

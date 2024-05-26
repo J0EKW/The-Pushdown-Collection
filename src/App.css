@@ -3,7 +3,77 @@
   color: rgb(0, 0, 0);
   display: flex;
   flex-direction: column;
+  box-sizing: border-box;
 }
+.app * {
+  box-sizing: border-box;
+}
+
+.light {
+  --border-colour: rgb(145, 135, 140);
+  --text-colour-primary: rgb(45, 35, 40);
+  --text-colour-secondary: rgb(255, 255, 255);
+  --back-colour-primary-1: rgb(255, 245, 250);
+  --back-colour-primary-2: rgb(250, 240, 245);
+  --back-colour-primary-3: rgb(245, 235, 240);
+  --back-colour-secondary: rgb(170, 0, 100);
+  --success: rgb(100, 170, 0);
+  --failure: rgb(0, 100, 170);
+  --target: rgb(170, 0, 100);
+  --success-light: rgb(200, 255, 100);
+  --failure-light: rgb(100, 200, 255);
+  --target-light: rgb(255, 120, 220);
+}
+
+.dark {
+  --border-colour: rgb(130, 130, 150);
+  --text-colour-primary: rgb(200, 200, 220);
+  --text-colour-secondary: rgb(0, 0, 0);
+  --back-colour-primary-1: rgb(0, 0, 10);
+  --back-colour-primary-2: rgb(20, 20, 30);
+  --back-colour-primary-3: rgb(40, 40, 50);
+  --back-colour-secondary: rgb(20, 220, 220);
+  --success: rgb(255, 20, 255);
+  --failure: rgb(255, 255, 20);
+  --target: rgb(20, 255, 255);
+  --success-light: rgb(155, 20, 155);
+  --failure-light: rgb(100, 100, 20);
+  --target-light: rgb(20, 100, 100);
+}
+
+.darkContrast {
+  --border-colour: rgb(255, 255, 255);
+  --text-colour-primary: rgb(255, 255, 255);
+  --text-colour-secondary: rgb(0, 0, 0);
+  --back-colour-primary-1: rgb(0, 0, 0);
+  --back-colour-primary-2: rgb(0, 0, 0);
+  --back-colour-primary-3: rgb(255, 255, 255);
+  --back-colour-secondary: rgb(255, 255, 255);
+  --success: rgb(0, 255, 0);
+  --failure: rgb(255, 0, 255);
+  --target: rgb(255, 255, 255);
+  --success-light: rgb(0, 120, 0);
+  --failure-light: rgb(120, 0, 120);
+  --target-light: rgb(120, 120, 120);
+}
+
+.lightContrast {
+  --border-colour: rgb(0, 0, 0);
+  --text-colour-primary: rgb(0, 0, 0);
+  --text-colour-secondary: rgb(255, 255, 255);
+  --back-colour-primary-1: rgb(255, 255, 255);
+  --back-colour-primary-2: rgb(255, 255, 255);
+  --back-colour-primary-3: rgb(0, 0, 0);
+  --back-colour-secondary: rgb(0, 0, 0);
+  --success: rgb(0, 255, 0);
+  --failure: rgb(255, 0, 255);
+  --target: rgb(0, 0, 0);
+  --success-light: rgb(120, 255, 120);
+  --failure-light: rgb(255, 120, 255);
+  --target-light: rgb(120, 120, 120);
+}
+
+
 
 .simWrapper {
   display: flex;
@@ -15,17 +85,20 @@
   width: 100vw;
   border-style: solid;
   border-width: 1px;
-  border-color: white;
-  background-color: rgb(44, 44, 44);
+  border-color: var(--border-colour);
+  background-color: var(--back-colour-primary-2)
 }
 
 .simState {
   display: flex;
   flex-flow: column;
-  background-color: white;
+  background-color: var(--target-light);
+  border-style: solid;
+  border-color: var(--border-colour);
+  border-width: 1px;
   border-radius: 20px;
   margin: 10px;
-  color: black;
+  color: var(--text-colour-primary);
   width: 170px;
   padding: 10px;
 }
@@ -36,13 +109,9 @@
   display: flex;
   flex-flow: row;
   flex-wrap: wrap;
-  /* border-style: solid;
-  border-width: 1px;
-  border-color: white; */
 }
 
 .inputsWrapper {
-  /* border-top: solid 1px white; */
   display: flex;
   flex-direction: column;
   overflow: auto;
@@ -50,25 +119,22 @@
 
 .simSetUpWrapper {
   width: 200px;
-  /* border-style: solid;
-  border-width: 1px;
-  border-color: white; */
 }
 
 .simButtonsWrapper {
   width: 40px;
   display: flex;
   flex-direction: column;
-  /* border-style: solid;
-  border-width: 1px;
-  border-color: white; */
 }
 
 #gui {
   width: 100vw;
   height: calc(100vh - 150px);
-  background-color: rgb(33, 33, 33);
   transform-origin: center;
+}
+
+.gui {
+  background-color: var(--back-colour-primary-1);
 }
 
 .guiState {
@@ -76,8 +142,56 @@
 }
 
 .xAxis, .yAxis {
-  background-color: rgb(55, 55, 55);
   transform-origin: center;
+  fill: var(--back-colour-primary-3);
+}
+
+/* .gui rect {
+  fill: var(--back-colour-primary-3);
+} */
+
+.connection path {
+  stroke: var(--back-colour-secondary);
+  fill: none
+}
+
+.initial {
+  stroke: var(--back-colour-secondary);
+  fill: var(--back-colour-secondary);
+}
+
+.arrow {
+  fill: var(--back-colour-secondary);
+}
+
+.stateCircle {
+  stroke: var(--back-colour-secondary);
+}
+
+.activeText {
+  fill: var(--text-colour-secondary)
+}
+
+.nonactiveText {
+  fill: var(--text-colour-primary)
+}
+
+.guiState .alternating {
+  stroke: var(--back-colour-secondary);
+  fill: none;
+}
+
+.guiState .pulse {
+  stroke: var(--back-colour-secondary);
+  fill: none;
+}
+
+#solid feFlood {
+  flood-color: var(--back-colour-primary-2);
+}
+
+#active feFlood {
+  flood-color: var(--back-colour-secondary);
 }
 
 .simButton {
@@ -88,9 +202,9 @@
   font-weight: 600;
   border-style: solid;
   border-width: 1px;
-  border-color: white;
+  border-color: var(--border-colour);
   background-color: transparent;
-  color: white;
+  color: var(--text-colour-primary);
 }
 
 #container {
@@ -111,17 +225,25 @@
   height: 30px;
   border-style: solid;
   border-width: 1px;
-  border-color: white;
-  background-color: rgb(33, 33, 33);
-  color: white;
+  border-color: var(--border-colour);
+  background-color: var(--back-colour-primary-1);
+  color: var(--text-colour-primary);
+}
+
+.target {
+  fill: var(--target);
+}
+
+.nontarget {
+  fill: var(--back-colour-primary-2);
 }
 
 .clicked {
 
-  background-color: white;
+  background-color: var(--text-colour-primary);
 }
 
-.txtInternalWrapper, .optionsInternalWrapper {
+.txtInternalWrapper, #optionsInternalWrapper {
 
   display: flex;
   flex-direction: column;
@@ -129,7 +251,7 @@
 
 .optionsAnimWrapper {
   width: 300px;
-  background-color: rgb(33, 33, 33);
+  background-color: var(--back-colour-primary-1);
 }
 
 .contextMenu {
@@ -137,8 +259,8 @@
   left: 0px;
   top: 0px;
   width: 150px;
-  border: solid 1px white;
-  background-color: rgb(44, 44, 44);
+  border: solid 1px var(--border-colour);
+  background-color: var(--back-colour-primary-2);
 }
 
 .reveal {
@@ -150,11 +272,11 @@
 .contextMenuButton {
   padding: 5px;
   width: 100%;
-  color: white;
+  color: var(--text-colour-primary);
   border: none;
   text-align: left;
   font-size: 15px;
-  background-color: rgb(44, 44, 44);
+  background-color: var(--back-colour-primary-2);
 }
 
 .contextMenuLabel {
@@ -162,7 +284,7 @@
   text-align: left;
   font-size: 15px;
   width: 100%;
-  color: white;
+  color: var(--text-colour-primary);
   border: none;
   text-align: left;
   display: flex;
@@ -174,22 +296,22 @@
   left: 50%;
   width: calc(50% - 15px);
   border: none;
-  background-color: rgb(33, 33, 33);
-  color: white;
+  background-color: var(--back-colour-primary-1);
+  color: var(--text-colour-primary);
 }
 
 .contextMenuCheckBox {
   position: absolute;
   left: 80%;
-  background-color: rgb(33, 33, 33);
+  background-color: var(--back-colour-primary-1);
 }
 
 .contextMenuSelect {
   position: absolute;
   left: 65%;
   border: none;
-  background-color: rgb(33, 33, 33);
-  color: white;
+  background-color: var(--back-colour-primary-1);
+  color: var(--text-colour-primary);
 }
 
 @keyframes revealAnimation {
@@ -223,9 +345,18 @@
 .collapse {
   border-style: solid;
   border-width: 1px;
-  border-color: white;
-  color: white;
-  background-color: rgb(44, 44, 44);
+  border-color: var(--border-colour);
+  color: var(--text-colour-primary);
+  background-color: var(--back-colour-primary-2);
+  box-sizing: border-box;
+}
+
+#collapse {
+  border-style: solid;
+  border-width: 1px;
+  border-color: var(--border-colour);
+  color: var(--text-colour-primary);
+  background-color: var(--back-colour-primary-2);
   box-sizing: border-box;
 }
 
@@ -233,8 +364,8 @@
   background-color: transparent;
   border-style: solid;
   border-width: 1px;
-  border-color: rgb(233, 233, 233);
-  color: rgb(44, 44, 44);;
+  border-color: transparent;
+  color: var(--text-colour-secondary);
   box-sizing: border-box;
   width: 25px;
   height: 25px;
@@ -246,10 +377,10 @@
   background-color: transparent;
   border-style: solid;
   border-width: 1px;
-  border-color: white;
-  color: white;
+  border-color: var(--border-colour);
+  color: var(--text-colour-primary);
   box-sizing: border-box;
-  width: 65%;
+  width: 50%;
   transition-duration: 0.2s;
   margin: 5px;
 }
@@ -258,7 +389,7 @@
   border-style: solid;
   border-width: 1px;
   border-color: transparent;
-  color: rgb(44, 44, 44);;
+  color: var(--text-colour-secondary);
   box-sizing: border-box;
   background-color: transparent;
   transition-duration: 0.2s;
@@ -267,7 +398,7 @@
 .remove {
   padding: 0%;
   border-color: transparent;
-  color: rgb(44, 44, 44);
+  color: var(--back-colour-primary-2);
   background-color: transparent;
   transition-duration: 0.2s;
   font-weight: 700;
@@ -283,7 +414,7 @@
   padding: 0%;
   margin: 0%;
   border-color: transparent;
-  color: rgb(233, 233, 233);
+  color: var(--text-colour-primary);
   background-color: transparent;
   transition-duration: 0.2s;
   font-weight: 700;
@@ -300,12 +431,12 @@
   border-left: solid;
   border-right: solid;
   border-width: 1px;
-  border-color: white;
+  border-color: var(--border-colour);
   box-sizing: border-box;
   text-align: center;
   display: flex;
   flex-flow: column;
-  background-color: rgb(44, 44, 44);
+  background-color: var(--back-colour-primary-2);
 }
 
 .txtStatesWrapper {
@@ -316,12 +447,12 @@
   border-left: solid;
   border-right: solid;
   border-width: 1px;
-  border-color: white;
+  border-color: var(--border-colour);
   box-sizing: border-box;
   text-align: center;
   display: flex;
   flex-flow: column;
-  background-color: rgb(44, 44, 44);
+  background-color: var(--back-colour-primary-2);
 }
 
 .slideIn {
@@ -359,40 +490,20 @@
   flex: 1;
   border-top: solid;
   border-bottom: solid;
-  border-color: white;
+  border-color: var(--border-colour);
   border-width: 2px;
-  background-color: rgb(33, 33, 33);
+  background-color: var(--back-colour-primary-1);
 }
-
-/* .listWrapper::before {
-  content: '';
-    display: block;
-    position: absolute;
-    width: 100%;
-    height: 20px;
-    background-image: linear-gradient(to top, transparent, rgb(44, 44, 44));
-    pointer-events: none;
-}
-
-.listWrapper::after {
-  content: '';
-    display: block;
-    position: absolute;
-    bottom: 34px;
-    width: 100%;
-    height: 20px;
-    background-image: linear-gradient(to bottom, transparent, rgb(44, 44, 44));
-    pointer-events: none;
-} */
 
 .transition {
   border-radius: 25px;
   border-style: solid;
   border-width: 1px;
+  border-color: var(--border-colour);
   margin: 5px;
   height: 31px;
   opacity: 1;
-  background-color: rgb(233, 233, 233);
+  background-color: var(--back-colour-secondary);
   vertical-align: middle;
   transition: all 0.2s ease-in;
 }
@@ -401,10 +512,11 @@
   border-radius: 25px;
   border-style: solid;
   border-width: 1px;
+  border-color: transparent;
   margin: 5px;
   height: 31px;
   opacity: 1;
-  background-color: rgb(233, 233, 233);
+  background-color: var(--back-colour-secondary);
   vertical-align: middle;
   transition: all 0.2s ease-in;
 }
@@ -459,21 +571,23 @@
   margin: 10px;
   font-weight: 700;
   font-size: larger;
-  background-color: rgb(44, 44, 44);
+  color: var(--text-colour-primary);
+  background-color: var(--back-colour-primary-2);
 }
 
 .simLabel {
+  color: var(--text-colour-primary);
   text-align: left;
   margin-left: 10px;
   font-weight: 700;
 }
 
 .fail {
-  background-color: rgb(255, 128, 128);
+  background-color: var(--failure-light);
 }
 
 .success {
-  background-color: rgb(128, 255, 128);
+  background-color: var(--success-light)
 }
 
 .pulse {
@@ -496,7 +610,7 @@
 
 @keyframes pulse-animation {
   0% {
-    stroke: rgba(0, 128, 128, 1);
+    stroke: var(--target);
     stroke-width: 5%;
     transform: scale(10%);
   }
@@ -514,7 +628,7 @@
 @keyframes pulse-animation-success {
   0% {
     stroke: none;
-    fill: rgba(0, 160, 0, 1);
+    fill: var(--success);
     transform: scale(10%);
   }
   100% {
@@ -528,11 +642,172 @@
   0% {
     stroke: none;
     transform: scale(10%);
-    fill: rgba(160, 0, 0, 1);
+    fill: var(--failure);
   }
   100% {
     stroke: none;
     fill: rgba(160, 0, 0, 0);
     transform: scale(200%);
+  }
+}
+
+#optionsInternalWrapper {
+  background-color: var(--back-colour-primary-2);
+  width: 300px;
+  margin-right: 0px;
+  transition-duration: 0.7s;
+}
+
+.optionsInternalWrapper.close {
+  margin-right: -300px
+}
+
+
+
+.optionHeader {
+  text-align: left;
+  padding: 10px;
+  margin: 0;
+  font-weight: 700;
+  font-size: larger;
+  color: var(--text-colour-primary);
+  background-color: var(--back-colour-primary-2);
+  border: solid var(--border-colour) 2px;
+  border-bottom: none;
+  border-left: none;
+}
+
+.optionFooter {
+  border-top: solid var(--border-colour) 2px;
+  padding: 10px;
+  margin: 0;
+  background-color: var(--back-colour-primary-2);
+}
+
+.options {
+  padding: 10px;
+  background-color: var(--back-colour-primary-1);
+  transition-duration: 0.7s;
+  border-top: solid var(--border-colour) 2px;
+}
+
+.options * {
+  color: var(--text-colour-primary);
+  transition-duration: 0.7s;
+  height: 40px;
+  vertical-align: middle;
+
+}
+
+.options.close {
+  padding: 0px 10px;
+}
+
+.options.close *  {
+  height: 0px
+}
+
+.options.open {
+  padding: 0px 10px;
+}
+
+.options.open *  {
+  height: 40px
+}
+
+.optionsBoxInput {
+  background-color: transparent;
+  border-style: solid;
+  border-width: 1px;
+  border-color: var(--border-colour);
+  color: var(--text-colour-primary);
+  box-sizing: border-box;
+  width: 25px;
+  height: 25px;
+  margin: 1%;
+}
+
+.optionsSelect {
+  border-style: solid;
+  border-width: 1px;
+  border-color: var(--border-colour);
+  color: var(--text-colour-primary);
+  box-sizing: border-box;
+  background-color: transparent;
+  margin: 1%;
+}
+
+.reset {
+  margin: 1%;
+  padding: 0%;
+  border: solid var(--border-colour) 2px;
+  background-color: var(--back-colour-primary-2);
+  color: var(--text-colour-primary);
+  width: 25px;
+  height: 25px;
+  transition-duration: 0.2s;
+  font-weight: 600;
+  font-size: medium;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.slideLeft {
+  animation: slideLeftAnimation;
+  animation-duration: 0.7s;
+}
+
+.slideRight {
+  animation: slideRightAnimation;
+  animation-duration: 0.7s;
+}
+
+.slideDown {
+  animation: slideDownAnimation;
+  animation-duration: 0.7s;
+}
+
+.slideUp {
+  animation: slideUpAnimation;
+  animation-duration: 0.7s;
+}
+
+@keyframes slideLeftAnimation {
+  0% {
+    transform: translateX(300px)
+  }
+
+  100% {
+    transform: translateX(0px)
+  }
+}
+
+@keyframes slideRightAnimation {
+  0% {
+    transform: translateX(0px)
+  }
+
+  100% {
+    transform: translateX(300px)
+  }
+}
+
+@keyframes slideDownAnimation {
+  0% {
+    transform: translateY(-100%)
+  }
+
+  100% {
+    transform: translateY(0%)
+  }
+}
+
+@keyframes slideUpAnimation {
+  0% {
+    transform: translateY(0%)
+  }
+
+  100% {
+    transform: translateY(-100%)
   }
 }

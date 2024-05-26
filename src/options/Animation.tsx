@@ -1,10 +1,12 @@
-import { useContext, useEffect, useState } from "react"
+import { useContext,  useState } from "react"
 import '../App.css';
-import './options.css';
-import { OptionsType } from "../types";
 import { OptionContext, OptionDispatchContext } from "../lib/OptionsContext";
 
-export const Animation = () => {
+type AnimationProps = {
+    colour: String
+}
+
+export const Animation = (props: AnimationProps) => {
     const [collapse, setCollapse] = useState<boolean>(true)
     const [render, setRender] = useState<boolean>(false)
     const [to, setTo] = useState<NodeJS.Timeout>()
@@ -13,7 +15,7 @@ export const Animation = () => {
 
     const updateVisiblity = () => {
         if (!collapse) {
-            document.getElementById('animOptionList')?.setAttribute('class', 'options close')
+            document.getElementById('animOptionList')?.setAttribute('class', props.colour + ' options close')
             setTo(setTimeout(() => {
                 setRender(false)
             }, 690))
@@ -21,7 +23,7 @@ export const Animation = () => {
             setRender(true)
             clearTimeout(to)
             setTimeout(() => {
-                document.getElementById('animOptionList')?.setAttribute('class', 'options')
+                document.getElementById('animOptionList')?.setAttribute('class', props.colour + ' options')
             }, 1)
         }
         setCollapse(!collapse)
@@ -53,17 +55,17 @@ export const Animation = () => {
     }
 
     return (
-        <div className='optionAnimationWrapper'>
-            <h1 className='optionHeader' onClick={() => {updateVisiblity()}}>{'Animation' + (collapse ? ' ▼' : ' ▲')}</h1>
+        <div className={props.colour + ' optionAnimationWrapper'}>
+            <h1 className={props.colour + ' optionHeader'} onClick={() => {updateVisiblity()}}>{'Animation' + (collapse ? ' ▼' : ' ▲')}</h1>
             {render && 
-            <div id='animOptionList' className='options close'>
-                <div className='enableWrapper'>
+            <div id='animOptionList' className={props.colour + ' options close'}>
+                <div className={props.colour + ' enableWrapper'}>
                     Enabled <input type='checkbox' checked={options['animationOn'].value} onClick={handleAnimationOn}/>
                 </div>
-                <div className='speedWrapper'>
+                <div className={props.colour + ' speedWrapper'}>
                     Speed 
                     <input type='range' min='0.5' max='3' step='0.1' value={options['animationSpeed'].value} onChange={(x) => {handleAnimationSpeed(Number(x.currentTarget.value))}} list='values'/>
-                    <input type='submit' className='reset' value='↺' onClick={resetAnimationSpeed}/>
+                    <input type='submit' className={props.colour + ' reset'} value='↺' onClick={resetAnimationSpeed}/>
                 </div>
                 <datalist id="values">
                     <option value="0.5" label="0.5"></option>

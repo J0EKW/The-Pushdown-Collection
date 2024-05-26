@@ -1,44 +1,33 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
+import { OptionContext } from '../lib/OptionsContext'
 
 type setUpProps = {
+  colour: String,
   input: string,
   stacks: string[],
-  onInputUpdate: Function,
-  onStacksUpdate: Function
+  onInputUpdate: Function
 }
 
 export const SetUp = (props: setUpProps) => {
     const [input, setInput] = useState<string>(props.input)
-    const [stacks, setStacks] = useState<string[]>(props.stacks)
+    const options = useContext(OptionContext)
 
     const handleInput = (e: any) => {
       if (e.key === 'Enter') {
-        props.onInputUpdate(input)
+        let simInput = input
+        if (options['bookendInput'].value) {
+          simInput = options['inputFrontChar'].value + input + options['inputEndChar'].value
+        }
+        props.onInputUpdate(simInput)
       }
     }
 
-    const handleStack = (e: any) => {
-      if (e.key === 'Enter') {
-          props.onStacksUpdate(stacks)
-      }
-  }
-
-  const updateStack = (value: string, index: number) => {
-      let newStacks = [...stacks]
-      newStacks[index] = value
-      setStacks(newStacks)
-  }
-
     return (
-    <div className='simSetUpWrapper'>
-        <h1 className='txtTransitionHeader'>Simulation</h1>
-        <div className='inputsWrapper'>
-          <div className='simLabel'>Input<input type='text' className='textInput' value={input} onChange={(e) => {setInput(e.currentTarget.value)}} onKeyDown={(e) => {handleInput(e)}} /></div>
-          {stacks.map((x, i) => {
-            return (
-                <div key={i} className='simLabel'>{'Stack ' + (i + 1)}<input type='text' className='textInput' value={x} onChange={(e) => {updateStack(e.currentTarget.value, i)}} onKeyDown={(e) => {handleStack(e)}} /></div>
-              )
-          })}
+    <div className={props.colour + ' simSetUpWrapper'}>
+        <h1 className={props.colour + ' txtTransitionHeader'}>Simulation</h1>
+        <div className={props.colour + ' inputsWrapper'}>
+          <div className={props.colour + ' simLabel'}>{'Input: ' + (options['bookendInput'].value ? options['inputFrontChar'].value : '')}<input type='text' className={props.colour + ' textInput'} onChange={(e) => {setInput(e.currentTarget.value)}} onKeyDown={(e) => {handleInput(e)}} />{(options['bookendInput'].value ? options['inputEndChar'].value : '')}</div>
+          <div className={props.colour + ' simLabel'}>{'Initial Stack: ' + props.stacks[0][0]}</div>
         </div>
     </div>
   )

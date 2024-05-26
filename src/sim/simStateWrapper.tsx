@@ -3,6 +3,7 @@ import { SimState } from './simState'
 import { State, Traversal } from '../types'
 
 type SimStateWrapperProps = {
+  colour: String,
   input: string,
   currentTraversals: Traversal[],
   states: State[],
@@ -18,20 +19,20 @@ export const SimStateWrapper = (props: SimStateWrapperProps) => {
   });
 
   return (
-    <div className='simStateWrapper'>
+    <div className={props.colour + ' simStateWrapper'}>
       { props.currentTraversals.map((x, i) => {
         let traversalHistory:string[] = []
         let currentState = props.states.find(s => s.id === x.stateId)
-        let className = 'simState'
+        let status = ''
         let tempIndex = -1
 
         if (x.end === 0) {
-          className = 'simState'
+          status = 'ongoing'
           tempIndex = i
         } else if (currentState?.accepting && ((props.haltCond && x.end === 1) || (!props.haltCond && x.end === 2))) {
-          className = 'simState success'
+          status = 'success'
         } else {
-          className = 'simState fail'
+          status = 'fail'
         }
 
         x.history.forEach((x, i) => {
@@ -40,7 +41,7 @@ export const SimStateWrapper = (props: SimStateWrapperProps) => {
           }
         })
         return (
-          <SimState key={i} className={className} input={props.input} stateName={stateNames[x.stateId]} stateHistory={traversalHistory} haltCond={props.haltCond} stateAccept={props.states.find(s => s.id === x.stateId)?.accepting ?? false} traversal={x} index={tempIndex} setSelected={(value: number) => {props.setSelected(value)}} />
+          <SimState colour={props.colour} key={i} input={props.input} stateName={stateNames[x.stateId]} status={status} stateHistory={traversalHistory} haltCond={props.haltCond} stateAccept={props.states.find(s => s.id === x.stateId)?.accepting ?? false} traversal={x} index={tempIndex} setSelected={(value: number) => {props.setSelected(value)}} />
         )
       }) }
     </div>

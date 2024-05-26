@@ -7,6 +7,7 @@ type WrapperProps = {
     transitions: Transition[],
     states: State[],
     stackCount: number,
+    colour: string,
     onRemoveTransition: Function,
     onCInputUpdate: Function,
     onCStateUpdate: Function,
@@ -45,11 +46,12 @@ export const Wrapper = (props: WrapperProps) => {
     return (
         <div id='txtWrapper'>
             { render ? (
-                <div className='txtInternalWrapper'>
+                <div className={props.colour + ' txtInternalWrapper'}>
                 <Transitions 
                 transitions={transitions}
                 states={states}
                 stackCount={props.stackCount}
+                colour={props.colour}
                 onRemove={(id: number) => {props.onRemoveTransition(id)}}
                 onCInputUpdate={(id: number, value: string) => {props.onCInputUpdate(id, value)}}
                 onCStateUpdate={(id: number, name: string) => {props.onCStateUpdate(id, name)}}
@@ -60,6 +62,7 @@ export const Wrapper = (props: WrapperProps) => {
                 onAdd={() => {props.onAddTransition()}}
                 />
                 <States
+                colour={props.colour}
                 states={states}
                 onRemove={(id: number) => {props.onRemoveState(id)}}
                 onNameUpdate={(id: number, name: string) => {props.onNameUpdate(id, name)}}
@@ -71,7 +74,7 @@ export const Wrapper = (props: WrapperProps) => {
                 </div>
             ) : (<></>)
             }
-            <button className='collapse' onClick={() => {updateVisiblity(!visible)}}>{visible ? "<" : ">"}</button>
+            <button className={props.colour + ' collapse'} onClick={() => {updateVisiblity(!visible)}}>{visible ? "<" : ">"}</button>
         </div>
     )
 }

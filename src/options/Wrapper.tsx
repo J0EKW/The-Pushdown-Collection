@@ -6,41 +6,43 @@ import { Automaton } from './Automaton'
 import { Input } from './Input'
 import { Stack } from './Stack'
 import '../App.css';
-import './options.css';
 
-export const Wrapper = () => {
+type OptionWrapperProps = {
+    colour: String
+}
 
-    const [visible, setVisible] = useState<boolean>(true)
+export const OptionWrapper = (props: OptionWrapperProps) => {
+
+    const [visible, setVisible] = useState<boolean>(false)
     const [render, setRender] = useState<boolean>(false)
     const [to, setTo] = useState<NodeJS.Timeout>()
 
-    const updateVisiblity = () => {
-        if (!visible) {
-            document.getElementsByClassName('optionsInternalWrapper')[0]?.setAttribute('class', 'optionsInternalWrapper close')
+    const updateVisibility = (visibility: boolean) => {
+        let newClass = visibility ? "slideLeft" : "slideRight"
+        document.getElementById('optionsInternalWrapper')?.setAttribute('class', props.colour + ' ' + newClass)
+        document.getElementById('collapse')?.setAttribute('class', props.colour + ' ' + newClass)
+        if (!visibility) {
             setTo(setTimeout(() => {
                 setRender(false)
             }, 690))
         } else {
             setRender(true)
-            clearTimeout(to)
-            setTimeout(() => {
-                document.getElementsByClassName('optionsInternalWrapper')[0]?.setAttribute('class', 'optionsInternalWrapper')
-            }, 1)
         }
-        setVisible(!visible)
+        console.log(visibility)
+        setVisible(visibility)
     }
 
     return (
         <div id='optionsWrapper'>
-        <button className='collapse' onClick={() => {updateVisiblity()}}>{visible ? "<" : ">"}</button>
+        <button id='collapse' className={props.colour + ''} onClick={() => {updateVisibility(!visible)}}>{visible ? ">" : "<"}</button>
             { render ? (
-                <div className='optionsInternalWrapper close'>
-                    <Animation />
-                    <Automaton />
-                    <Input />
-                    <Stack />
-                    <Visual />
-                    <h1 className='optionFooter'/>
+                <div id='optionsInternalWrapper' className={props.colour + ' slideLeft'}>
+                    <Animation colour={props.colour}/>
+                    <Automaton colour={props.colour}/>
+                    <Input colour={props.colour}/>
+                    <Stack colour={props.colour}/>
+                    <Visual colour={props.colour}/>
+                    <h1 className={props.colour + ' optionFooter'}/>
                 </div>
             ) : (<></>)
             }

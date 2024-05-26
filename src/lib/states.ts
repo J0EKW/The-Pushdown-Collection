@@ -57,10 +57,13 @@ export const updatePosition = (id: number, x: number, y: number, states: State[]
 export const add = (states: State[]): State[] => {
   
     let stateId = 0
+    let isInit = false
     if (states.length !== 0) {
       stateId = states[states.length - 1].id + 1
+    } else {
+        isInit = true
     }
   
-    states.push({id: stateId, name: 'q' + stateId, initial: false, accepting: false, alternating: false, x: 0, y: 0})
+    states.push({id: stateId, name: 'q' + stateId, initial: isInit, accepting: false, alternating: false, x: 0, y: 0})
     return states
   }
