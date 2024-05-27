@@ -1,6 +1,7 @@
 {
   "name": "the-pushdown-collection",
   "version": "0.1.0",
+  "homepage": "https://j0ekw.github.io/the-pushdown-collection",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.5",
