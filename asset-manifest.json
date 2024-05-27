@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/the-pushdown-collection/static/css/main.e001f728.css",
+    "main.js": "/the-pushdown-collection/static/js/main.8f93ce85.js",
+    "static/js/453.cf329736.chunk.js": "/the-pushdown-collection/static/js/453.cf329736.chunk.js",
+    "index.html": "/the-pushdown-collection/index.html",
+    "main.e001f728.css.map": "/the-pushdown-collection/static/css/main.e001f728.css.map",
+    "main.8f93ce85.js.map": "/the-pushdown-collection/static/js/main.8f93ce85.js.map",
+    "453.cf329736.chunk.js.map": "/the-pushdown-collection/static/js/453.cf329736.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.e001f728.css",
+    "static/js/main.8f93ce85.js"
+  ]
+}
