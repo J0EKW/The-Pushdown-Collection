@@ -122,7 +122,6 @@ export const Step = (transitions: Transition[], input: string, traversal: Traver
     let tempId = traversal[traversal.length - 1].id + 1
     let newTraversals: Traversal[] = []
     let completeTraversals: Traversal[] = []
-    console.log(traversal)
     traversal.forEach((x, i) => {
 
       if (x.end === 0) {
@@ -158,9 +157,7 @@ export const Step = (transitions: Transition[], input: string, traversal: Traver
               stackHead[stIndex] = x.stack[stIndex][last]
             }
           }
-          console.log(transitions)
           let transitionOptions = transitions.filter(transition => {
-            console.log(stackCount)
             if (stackCount === 0) {
               return (
                 transition.cStateId === x.stateId &&
@@ -193,7 +190,6 @@ export const Step = (transitions: Transition[], input: string, traversal: Traver
               x.stack.forEach((s, i) => {
                   newStacks[i] = stackUpdate(s, transition.nStack[i], wildCard)
               })
-              console.log(transition)
               newTraversals.push({
                   id: tempId,
                   history: [...x.history,  x.stateId],

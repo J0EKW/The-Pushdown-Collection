@@ -121,7 +121,6 @@ export const updateStack = (id: number, value: string | undefined, stack: boolea
         transitions[index].nStack[stackIndex] = oldVal
       }
     }
-    console.log(transitions)
     }
     
   return transitions

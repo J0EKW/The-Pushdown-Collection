@@ -12,8 +12,7 @@ const base = {
     inputFrontChar: 'S',
     inputEndChar: 'E',
     stackFrontChar: 'Z',
-    colourScheme: window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 1 : 0,
-    textSize: 1
+    colourScheme: window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 1 : 0
 }
 
 function newOption<T>(base: T): OptionType<T> {
@@ -31,7 +30,6 @@ DefaultOptions['stackFrontChar']     = newOption<string>(base.stackFrontChar)
 //number
 DefaultOptions['animationSpeed']     = newOption<number>(base.animationSpeed)
 DefaultOptions['colourScheme']       = newOption<number>(base.colourScheme)
-DefaultOptions['textSize']           = newOption<number>(base.textSize)
 DefaultOptions['stackCount']         = newOption<number>(base.stackCount)
 
 //boolean

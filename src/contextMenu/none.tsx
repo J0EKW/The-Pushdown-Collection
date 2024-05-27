@@ -1,5 +1,3 @@
-import { State } from "../types";
-
 type CMNoneProps = {
     colour: String,
     top: number,

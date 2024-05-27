@@ -38,7 +38,6 @@ export const SimState = (props: SimStateProps) => {
     if (newSelected) {
       newVal = props.traversal.id
     }
-    console.log(newVal)
     props.setSelected(newVal)
     setSelected(newSelected)
   }

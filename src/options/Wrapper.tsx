@@ -28,7 +28,6 @@ export const OptionWrapper = (props: OptionWrapperProps) => {
         } else {
             setRender(true)
         }
-        console.log(visibility)
         setVisible(visibility)
     }
 

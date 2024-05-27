@@ -1,12 +1,11 @@
 import React, { useEffect, useReducer, useState } from 'react';
 import './App.css';
-import { Connection, RegularPA, State, Transition, Traversal } from './types';
+import { Connection, State, Transition, Traversal } from './types';
 import { Wrapper as TxtWrapper } from './txt/wrapper';
 import { Wrapper as SimWrapper } from './sim/wrapper';
 import { add as tAdd, remove as tRemove, updateState, updateInputHead, updateStack, updateInput, findDuplicateTransition, findInvalidAlphabetUse } from './lib/transitions';
 import { add as sAdd, remove as sRemove, updateAccepting, updateAlternating, updateInit, updateName, updatePosition } from './lib/states';
 import { Step, animate, assessSimulation } from './lib/simulation';
-import { GuiState } from './gui/state';
 import { GuiWrapper } from './gui/wrapper';
 import { gsap } from 'gsap';
 import { MotionPathPlugin } from "gsap/MotionPathPlugin";
@@ -46,70 +45,6 @@ function App() {
       }
     }
     return true
-  }
-
-  const stackUpdate = (a: string, b: string): string => {
-    let stack = ""
-    stack = a.slice(0, -1)
-    for (let i = b.length - 1; i > -1; i--) {
-      stack += b[i]
-    }
-    return stack
-  }
-
-  const searchAutomata = () => {
-    const input = "011"
-    let traversal = [defaultTraversal];
-    let tempId:number = 1;
-    
-    for (let tIndex = 0; tIndex < traversal.length; tIndex++) {
-      if (tIndex > 1000) {
-        break;
-      }
-      let tElement = traversal[tIndex]
-      let stackTop = [...tElement.stack]
-      if (
-        (!options['haltCondition'].value && (tElement.inputHead >= 0 && tElement.inputHead < input.length)) ||
-        (options['haltCondition'].value && (tElement.stack.length > 0))
-      ) {
-        for (let stIndex = 0; stIndex < stackTop.length; stIndex++) {
-          let last = stackTop[stIndex].length - 1
-          stackTop[stIndex] = stackTop[stIndex][last]
-        }
-        let transitionOptions = transitions.filter(transition => 
-          transition.cStateId === tElement.stateId &&
-          transition.cInput === input[tElement.inputHead] &&
-          arrayEqual(transition.cStack, stackTop))
-        if (transitionOptions.length > 0) {
-          transitionOptions.forEach(transition => {
-            let newStacks: string[] = []
-            tElement.stack.forEach((s, i) => {
-              newStacks[i] = stackUpdate(s, transition.nStack[i])
-            })
-            traversal.push({
-              id: tempId,
-              history: [...tElement.history, tElement.id],
-              stateId: transition.nStateId,
-              transitionId: transition.id,
-              stack: newStacks,
-              inputHead: tElement.inputHead + transition.nInputHead,
-              end: 0
-            })
-            tempId++;
-          });
-        } else if (tElement.end === 0) {
-            tElement.end = 1 //Halt by lack of options
-        }
-      } else if (tElement.end === 0) {
-        tElement.end = options['haltCondition'].value ? 3 : 2 //Halt by empty stack/end of input
-      }
-    }
-    setTraversal(traversal);
-    return traversal
-  }
-
-  const runSim = () => {
-    let traversal = searchAutomata()
   }
 
   const reset = () => {
@@ -243,7 +178,6 @@ function App() {
     let newTraversals = [defaultTraversal]
     let index = 0
     let duplicates : Transition[] = []
-    console.log(stacks)
     if (options['forceVisibly'].value && findInvalidAlphabetUse(transitions)) {
       return
     }
@@ -272,7 +206,6 @@ function App() {
       while (true) {
         if (currentTraversals.length > 0) {
           newTraversals = Step([...transitions], input, [...currentTraversals], options['stackCount'].value)
-          console.log(newTraversals)
         }
         if (arrayEqual(newTraversals, currentTraversals)) {
           break
@@ -364,11 +297,12 @@ function App() {
         }
       }
     }
-
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pos, scale, states, selectedTraversal])
 
   useEffect(() => {
     setStacks(Array(2).fill(options['stackFrontChar'].value))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [options['stackFrontChar'].value])
 
   useEffect(() => {
@@ -380,6 +314,7 @@ function App() {
       stack: stacks,
       inputHead: options['bookendInput'].value ? 1 : 0,
       end: defaultTraversal.end})
+      // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [stacks, options['bookendInput'].value])
 
   useEffect(() => {
@@ -400,17 +335,13 @@ function App() {
         default:
             break
     }
-    console.log(newColour)
     setColour(newColour)
     
+    // eslint-disable-next-line react-hooks/exhaustive-deps
 }, [options['colourScheme'].value])
 
   return (
     <div className="App">
-      {/* <button onClick={searchAutomata}>Simulate PA</button>
-      <button onClick={reset}>Reset</button>
-      <button onClick={() => console.log(traversal)}>View PA</button>
-      <button onClick={assessSimulation}>Assess Simulation</button> */}
       <OptionContext.Provider value={options} >
       <OptionDispatchContext.Provider value={optionsDispatch} >
       <GuiWrapper

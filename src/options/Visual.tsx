@@ -43,15 +43,6 @@ export const Visual = (props: VisualProps) => {
         updateVisibility(visible)
     }
 
-    const handleTextSize = (value: number) => {
-        let valueParam = value
-        dispatch({
-            type: 'set',
-            id: 'textSize',
-            value: valueParam
-        })
-    }
-
     return (
         <div id='visualOptionWrapper'>
             <h1 className={props.colour + ' optionHeader'} onClick={() => {updateVisibility(!visible)}}>{'Visual' + (!visible ? ' ▼' : ' ▲')}</h1>
@@ -66,14 +57,6 @@ export const Visual = (props: VisualProps) => {
                         <option value={3}>Light Contrast</option>
                     </select>
                 </div>
-                <div className={props.colour + ' textSizeWrapper'}>
-                    Text Size <input type='range' min='1' max='3' step='1' value={options['textSize'].value} onChange={(x) => {handleTextSize(Number(x.currentTarget.value))}} list='values'/>
-                </div>
-                <datalist id="values">
-                    <option value="1" label="1"></option>
-                    <option value="2" label="2"></option>
-                    <option value="3" label="3"></option>
-                </datalist>
             </div>}
         </div>
     )
