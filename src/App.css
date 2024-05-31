@@ -4,9 +4,21 @@
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
+  position: relative;
 }
 .app * {
   box-sizing: border-box;
+}
+
+.header {
+  padding: 10px;
+  font-size: large;
+  font-weight: 700;
+  color: var(--text-colour-primary);
+  background-color: var(--back-colour-primary-2);
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: var(--border-colour);
 }
 
 .light {
@@ -128,6 +140,7 @@
 }
 
 #gui {
+  position: absolute;
   width: 100vw;
   height: calc(100vh - 150px);
   transform-origin: center;
@@ -207,16 +220,10 @@
   color: var(--text-colour-primary);
 }
 
-#container {
-  position: relative;
-  display: flex;
-  flex-direction: row;
-  align-self: center;
-}
-
 #guiButtonsWrapper {
   position: absolute;
-  left: calc((100vw / 2) - 152.5px);
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .guiButton {
@@ -326,8 +333,6 @@
 
 #txtWrapper {
   position: absolute;
-  left: 0;
-  top: 0;
   display: flex;
   flex-direction: row;
   height: calc(100vh - 150px);
@@ -335,11 +340,10 @@
 
 #optionsWrapper {
   position: absolute;
-  right: 0;
-  top: 0;
   display: flex;
   flex-direction: row;
   height: calc(100vh - 150px);
+  right: 0;
 }
 
 .collapse {
@@ -423,23 +427,7 @@
   vertical-align: middle;
 }
 
-.txtTransitionsWrapper {
-  position: relative;
-  width: 300px;
-  height: 50%;
-  border-top: solid;
-  border-left: solid;
-  border-right: solid;
-  border-width: 1px;
-  border-color: var(--border-colour);
-  box-sizing: border-box;
-  text-align: center;
-  display: flex;
-  flex-flow: column;
-  background-color: var(--back-colour-primary-2);
-}
-
-.txtStatesWrapper {
+.txtTransitionsWrapper, .txtStatesWrapper {
   position: relative;
   width: 300px;
   height: 50%;

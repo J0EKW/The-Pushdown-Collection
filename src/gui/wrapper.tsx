@@ -323,7 +323,6 @@ export const GuiWrapper = (props: GuiWrapperProps) => {
 
     return (
       <>
-      <GuiButtons colour={props.colour} interactMode={props.interactMode} onInteractModeUpdate={(value: number) => {props.onInteractModeUpdate(value)}} />
         <svg id='gui' className={props.colour + ' gui'} onMouseMove={(e) => drag(e)} onMouseUp={() => setSelected(-1)} onMouseDown={(e:React.MouseEvent) => handleMouseDown(e)} onContextMenu={(e:any) => {contextMenu(e)}}>
           <defs>
             <marker 
@@ -372,6 +371,7 @@ export const GuiWrapper = (props: GuiWrapperProps) => {
             
             })}
         </svg>
+        <GuiButtons colour={props.colour} interactMode={props.interactMode} onInteractModeUpdate={(value: number) => {props.onInteractModeUpdate(value)}} />
         {noneContextMenu && <CMNone
             colour={props.colour} 
             left={contextMenuPos.x}

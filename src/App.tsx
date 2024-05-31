@@ -341,6 +341,8 @@ function App() {
 }, [options['colourScheme'].value])
 
   return (
+    <>
+     <div className={colour + " header"}>The Pushdown Collection - v0.1.0 - <a href="https://github.com/J0EKW/the-pushdown-collection">repo</a></div>
     <div className="App">
       <OptionContext.Provider value={options} >
       <OptionDispatchContext.Provider value={optionsDispatch} >
@@ -410,6 +412,7 @@ function App() {
           </OptionDispatchContext.Provider>
         </OptionContext.Provider>
     </div>
+    </>
   );
 }
 
