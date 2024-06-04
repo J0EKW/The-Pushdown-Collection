@@ -211,12 +211,12 @@ export const GuiWrapper = (props: GuiWrapperProps) => {
         }
         if (selected >= 0) {
           let x = (((coord.x) - ((wrapper ? wrapper.clientWidth : window.innerWidth) / 2)) - offset.x) / (scale / 100);
-          let y = ((((coord.y) - ((wrapper ? wrapper.clientHeight : window.innerHeight - 150) / 2)) - offset.y) / (scale / 100)) + 40;
+          let y = ((((coord.y) - ((wrapper ? wrapper.clientHeight : window.innerHeight - 150) / 2)) - offset.y) / (scale / 100)) + 44;
           props.onStatePosUpdate(selected, x, y)
 
         } else  if (selected === -2){
           let newX = (offset.x - coord.x);
-          let newY = (offset.y - coord.y);
+          let newY = (offset.y - coord.y) - 44;
           setPosition({x: newX, y: newY})
           props.onPosUpdate({x: newX, y: newY})
         }
