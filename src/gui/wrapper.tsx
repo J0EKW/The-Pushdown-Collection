@@ -352,7 +352,7 @@ export const GuiWrapper = (props: GuiWrapperProps) => {
           </defs>
           <rect className={'xAxis'} y={'50%'} width={'100vw'} height={'5px'} transform={"translate(0, " + -position.y + ") scale(1, " + scale / 100 + ")"} />
           <rect className={'yAxis'} x={'50%'} width={'5px'} height={'100vh'} transform={"translate(" + -position.x + ", 0) scale(" + scale / 100 + ", 1)"} />
-          {firstState && <path d={'M ' + String(tempX) + ',' + String(tempY) + ' L ' + String(mouseX) + ',' + String(mouseY)} stroke="white" strokeWidth={String(scale / 10) + 'px'} fill='none'/>}
+          {firstState && <path d={'M ' + String(tempX) + ',' + String(tempY) + ' L ' + String(mouseX) + ',' + String(mouseY)} strokeWidth={String(scale / 10) + 'px'} className='tempConnection'/>}
           {connections.map((x, i) => {
               let cState = states.find(s => s.id === x.cStateId)
               let nState = states.find(s => s.id === x.nStateId)

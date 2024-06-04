@@ -163,7 +163,7 @@
   fill: var(--back-colour-primary-3);
 } */
 
-.connection path {
+.connection path, .tempConnection {
   stroke: var(--back-colour-secondary);
   fill: none
 }
