@@ -172,7 +172,6 @@ function App() {
   }
 
   const clientSimRun = () => {
-    let allTraversals: Traversal[][] = []
     let currentTraversals: Traversal[] = []
     let tempTimeouts: NodeJS.Timeout[] = []
     let newTraversals = [defaultTraversal]
@@ -211,7 +210,6 @@ function App() {
           break
         }
         
-        allTraversals.push(newTraversals)
         tempTimeouts.push(setTimeout((newTraversals: Traversal[], currentTraversals: Traversal[]) => {
           setCurrentTraversal(newTraversals)
           gsap.killTweensOf("*");
@@ -243,35 +241,50 @@ function App() {
   }
 
   const clientSimStep = () => {
-    let newTraversals = [defaultTraversal]
-    if (currentTraversal.length > 0) {
-      newTraversals = Step([...transitions], input, [...currentTraversal], options['stackCount'].value)
+    let duplicates : Transition[] = []
+
+    if (options['forceDeterministic'].value) {
+      for (let x = 0; x < transitions.length; x++) {
+        duplicates = [...duplicates, ...findDuplicateTransition(transitions[x], transitions)]
+      }
     }
-    if (arrayEqual(newTraversals, currentTraversal)) {
-      assessSimulation(traversal, states)
+    if (duplicates.length !== 0) {
+      console.log("You have set the simulation to only allow deterministic connections, and nondeterministic connections were found")
+    } else if (states.length === 0 || transitions.length === 0) {
+      console.log("You have no states/transitions, which are required to run the simulation")
+    } else if (states.find(s => s.initial) === undefined) {
+      console.log("You need to set one of the states as the Initial State for the simulation to work")
     } else {
-      setTraversal([...traversal, ...newTraversals])
-    }
-    setCurrentTraversal(newTraversals)
-    setSelectedTraversal(-1)
-
-    gsap.killTweensOf("*");
-    currentTraversal.forEach((x, i) => {
-      let ball = document.getElementById(String("travAnim" + i));
-      let pulse = document.getElementById(String("animPulse" + i));
-      
-      ball?.remove()
-      pulse?.remove()
-    })
-
-
-    if (options['animationOn'].value) {
-      if (selectedTraversal === -1) { 
-        animate([...newTraversals], [...connections], [...states], options['haltCondition'].value, scale / 100, options['animationSpeed'].value, true)
+      let newTraversals = [defaultTraversal]
+      if (currentTraversal.length > 0) {
+        newTraversals = Step([...transitions], input, [...currentTraversal], options['stackCount'].value)
+      }
+      if (arrayEqual(newTraversals, currentTraversal)) {
+        assessSimulation(traversal, states)
       } else {
-        let target = newTraversals.find(t => t.id === selectedTraversal)
-        if (target !== undefined) {
-          animate([target], [...connections], [...states], options['haltCondition'].value, scale / 100, options['animationSpeed'].value, true)
+        setTraversal([...traversal, ...newTraversals])
+      }
+      setCurrentTraversal(newTraversals)
+      setSelectedTraversal(-1)
+  
+      gsap.killTweensOf("*");
+      currentTraversal.forEach((x, i) => {
+        let ball = document.getElementById(String("travAnim" + i));
+        let pulse = document.getElementById(String("animPulse" + i));
+        
+        ball?.remove()
+        pulse?.remove()
+      })
+  
+  
+      if (options['animationOn'].value) {
+        if (selectedTraversal === -1) { 
+          animate([...newTraversals], [...connections], [...states], options['haltCondition'].value, scale / 100, options['animationSpeed'].value, true)
+        } else {
+          let target = newTraversals.find(t => t.id === selectedTraversal)
+          if (target !== undefined) {
+            animate([target], [...connections], [...states], options['haltCondition'].value, scale / 100, options['animationSpeed'].value, true)
+          }
         }
       }
     }
