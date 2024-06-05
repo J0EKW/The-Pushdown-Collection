@@ -257,6 +257,9 @@ function App() {
       console.log("You have no states/transitions, which are required to run the simulation")
     } else if (states.find(s => s.initial) === undefined) {
       console.log("You need to set one of the states as the Initial State for the simulation to work")
+    } else if (options['forceVisibly'].value && findInvalidAlphabetUse(transitions)) {
+      console.log("You have set the simulation to be visibly pushdown, however there are characters that appear in multiple alphabets")
+    
     } else {
       let newTraversals = [defaultTraversal]
       if (currentTraversal.length > 0) {
