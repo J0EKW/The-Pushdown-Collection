@@ -64,7 +64,7 @@ export const assessSimulation = (traversal: Traversal[], states: State[]) => {
         let universalStateResult = true
         states.forEach(s => {
             if (s.alternating) {
-                universalStateResult = universalStateResult && assessUniversalState(s.id, traversal, states)
+              universalStateResult = universalStateResult && assessUniversalState(s.id, traversal, states)
             }
         })
 
@@ -123,6 +123,10 @@ export const Step = (transitions: Transition[], input: string, traversal: Traver
     let newTraversals: Traversal[] = []
     let completeTraversals: Traversal[] = []
     traversal.forEach((x, i) => {
+
+      if (x.id !== 0 && x.transitionId == -1) {
+        completeTraversals.push(x)
+      }
 
       if (x.end === 0) {
         if (!stackLengthGreaterThan(x.stack, stackCount, 0)) {

@@ -172,6 +172,7 @@ function App() {
   }
 
   const clientSimRun = () => {
+    let allTraversals: Traversal[] = []
     let currentTraversals: Traversal[] = []
     let tempTimeouts: NodeJS.Timeout[] = []
     let newTraversals = [defaultTraversal]
@@ -207,6 +208,7 @@ function App() {
           newTraversals = Step([...transitions], input, [...currentTraversals], options['stackCount'].value)
         }
         if (arrayEqual(newTraversals, currentTraversals)) {
+          assessSimulation(allTraversals, states)
           break
         }
         
@@ -234,6 +236,7 @@ function App() {
           }
         }, index * 1500 / options['animationSpeed'].value, newTraversals, currentTraversals))
         currentTraversals = newTraversals
+        allTraversals = [...allTraversals, ...newTraversals]
         index += 1
       }
       setAnimTimeouts(tempTimeouts)
@@ -259,6 +262,7 @@ function App() {
       if (currentTraversal.length > 0) {
         newTraversals = Step([...transitions], input, [...currentTraversal], options['stackCount'].value)
       }
+
       if (arrayEqual(newTraversals, currentTraversal)) {
         assessSimulation(traversal, states)
       } else {
@@ -352,6 +356,19 @@ function App() {
     
     // eslint-disable-next-line react-hooks/exhaustive-deps
 }, [options['colourScheme'].value])
+
+useEffect(() => {
+  if (options['enableAlternating'].value == false) {
+    let newStates = states
+    newStates.forEach(x => {
+      if (x.alternating) {
+        x.alternating = false
+      }
+    })
+    setStates(newStates)
+  }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+}, [options['enableAlternating'].value])
 
   return (
     <>

@@ -38,6 +38,10 @@ export const Automaton = (props: AutomatonProps) => {
     }
 
     const handleEnableAlternating = () => {
+        if (!options['enableAlternating'].value == false) {
+            
+        }
+
         dispatch({
             type: 'set',
             id: 'enableAlternating',
