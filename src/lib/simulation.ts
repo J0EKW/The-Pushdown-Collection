@@ -278,6 +278,7 @@ export const animate = (traversals: Traversal[], connections: Connection[], stat
       travAnim.setAttribute('id', String("travAnim" + i));
       travAnim.setAttribute('className', 'travAnim');
       travAnim.setAttribute('stroke', 'var(--border-colour)');
+      travAnim.setAttribute('stroke-width', '5px')
       travAnim.style.setProperty('animation-delay', String(i * 10 / speed) + "s")
 
       if (i % 4 === 0) {
@@ -299,7 +300,7 @@ export const animate = (traversals: Traversal[], connections: Connection[], stat
         travAnim.setAttribute('fill', 'var(--back-colour-primary-1)');
       }
 
-      let firstState = document.getElementById('guiState' + states[0].id)
+      let firstState = document.getElementById('gState' + states[0].id)
       parent.insertBefore(travAnim, firstState);
       tween = gsap.to(String("#travAnim" + i), {
         motionPath: {

@@ -151,6 +151,7 @@
 }
 
 .guiState {
+  user-select: none;
   transform-origin: center;
 }
 

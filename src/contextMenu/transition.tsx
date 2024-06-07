@@ -78,7 +78,7 @@ export const CMTransition = (props: CMTransitionProps) => {
     }, [props.nState])
 
     return (
-        <div id='transitionContextMenu' className={props.colour + ' contextMenu reveal'} style={{left: props.left, top: props.top}} >
+        <div id='contextMenu' className={props.colour + ' contextMenu reveal'} style={{left: props.left, top: props.top}} >
             <div className={props.colour + ' contextMenuLabel'}>cState <input className={props.colour + ' contextMenuInput'} type='text' value={cState} onChange={(e) => setCState(e.currentTarget.value)} onKeyDown={(e) => handleCState(e)}/></div>
             <div className={props.colour + ' contextMenuLabel'}>cInput <input className={props.colour + ' contextMenuInput'} type='text' value={cInput} maxLength={1} onChange={(e) => setCInput(e.currentTarget.value)} onKeyDown={(e) => handleCInput(e)}/></div>
             {props.transition.cStack.map((x, i) => {

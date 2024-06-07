@@ -21,7 +21,7 @@ type WrapperProps = {
 export const Wrapper = (props: WrapperProps) => {
   
     return (
-    <div className={props.colour + ' simWrapper'}>
+    <div id='simWrapper' className={props.colour + ' simWrapper'}>
         <SetUp 
         colour={props.colour}
         input={props.input}

@@ -35,10 +35,10 @@ export const GuiConnection = (props: GuiConnectionProps) => {
   let active = props.traversals.filter(t => props.transitions.find(tr => tr.id === t.transitionId) !== undefined)
 
     if (guiCState !== undefined && guiNState !== undefined) {
-      let adaptedCX = ((cState.x - 100) * props.scale) + (guiCState.width / 2) + (props.width / 2) - props.offset.x
-      let adaptedNX = ((nState.x - 100) * props.scale) + (guiNState.width / 2) + (props.width / 2) - props.offset.x
-      let adaptedCY = ((cState.y - 100) * props.scale) + (guiCState.height / 2) + (props.height / 2) - props.offset.y
-      let adaptedNY = ((nState.y - 100) * props.scale) + (guiNState.height / 2) + (props.height / 2) - props.offset.y
+      let adaptedCX = (cState.x * props.scale) + (props.width / 2) - props.offset.x
+      let adaptedNX = (nState.x * props.scale) + (props.width / 2) - props.offset.x
+      let adaptedCY = (cState.y * props.scale) + (props.height / 2) - props.offset.y
+      let adaptedNY = (nState.y * props.scale) + (props.height / 2) - props.offset.y
       
       pathD = String("M " + 
       String(adaptedCX) + " " + 

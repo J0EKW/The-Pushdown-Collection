@@ -7,6 +7,7 @@ import { CMNone } from '../contextMenu/none'
 import { CMState } from '../contextMenu/state'
 import { CMTransition } from '../contextMenu/transition'
 import { TweenLite, gsap } from 'gsap'
+import { setUncaughtExceptionCaptureCallback } from 'process'
 
 type GuiWrapperProps = {
     colour: String,
@@ -51,279 +52,235 @@ const getMousePosition = (evt:React.MouseEvent<SVGCircleElement|SVGSVGElement|SV
     };
   }
 
-
-
 const findMirrorConnections = (cStateId:number, nStateId:number, connections: Connection[]): boolean => {
   connections = connections.filter(c => c.cStateId === nStateId && c.nStateId === cStateId);
   return connections.length > 0;
+}
+
+const isPointInBox = (point: {x: number, y: number}, boxId: string, restriction: number): boolean => {
+  let box = document.getElementById(boxId)?.getBoundingClientRect()
+  return (box !== undefined && 
+    point.x > box.left + restriction &&
+    point.x < box.right - restriction &&
+    point.y > box.top + restriction &&
+    point.y < box.bottom - restriction
+  )
 }
 
 export const GuiWrapper = (props: GuiWrapperProps) => {
     let states = props.states
     let connections = props.connections
     let wrapper = document.getElementById('gui')
+    let headerOffset = Number(document.getElementById('header')?.getBoundingClientRect().height) ?? 0
+    const isFirefox = window.navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
+    const centrePos = {x: ((wrapper ? wrapper.clientWidth : window.innerWidth) / 2), y: ((wrapper ? wrapper.clientHeight : window.innerHeight - 150) / 2)}
+
+    // -2 means the screen is grabbed
+    // -1 means nothing is grabbed
+    // 'n' means state with id 'n' is grabbed
     const [selected, setSelected] = useState<number>(-1)
     const [offset, setOffset] = useState({x:0, y:0});
     const [scale, setScale] = useState<number>(100)
     const [position, setPosition] = useState<{x: number, y: number}>({x: 0, y: 0})
     const [firstState, setFirstState] = useState<State | undefined>(undefined)
-    const [tempX, setTempX] = useState<number>(0)
-    const [tempY, setTempY] = useState<number>(0)
-    const [mouseX, setMouseX] = useState<number>(0)
-    const [mouseY, setMouseY] = useState<number>(0)
-    const [noneContextMenu, setNoneContextMenu] = useState<boolean>(false)
-    const [stateContextMenu, setStateContextMenu] = useState<boolean>(false)
-    const [transitionContextMenu, setTransitionContextMenu] = useState<boolean>(false)
+    const [tempPos, setTempPos] = useState<{x: number, y: number}>({x: 0, y: 0})
+    const [mousePos, setMousePos] = useState<{x: number, y: number}>({x: 0, y: 0})
+    const [contextMenu, setContextMenu] = useState<number>(0)
     const [contextMenuPos, setContextMenuPos] = useState<{x: number, y: number}>({x: 0, y: 0})
     const [cmState, setCMState] = useState<State>({id: -1, name: 'placeholder', initial: false, accepting: false, alternating: false, x: 0, y: 0})
     const [cmTransition, setCMTransition] = useState<Transition>({id: -1, cStateId: -1, nStateId: -1, cStack: ['Z'], nStack: ['Z'], cInput: '0', nInputHead: 1})
 
     const handleMouseDown = (evt:React.MouseEvent) => {
-        let offsetTemp = {x: evt.clientX, y: evt.clientY};
-        let alignedOffset = {x: offsetTemp.x - ((wrapper ? wrapper.clientWidth : window.innerWidth) / 2), y: offsetTemp.y - ((wrapper ? wrapper.clientHeight : window.innerHeight - 150) / 2)}
-        
-        let contextMenu = document.getElementsByClassName('contextMenu')[0]?.getBoundingClientRect()
-        if ( contextMenu !== undefined && (
-          offsetTemp.x < contextMenu.left ||
-          offsetTemp.x > contextMenu.right ||
-          offsetTemp.y < contextMenu.top ||
-          offsetTemp.y > contextMenu.bottom)) {
-            setStateContextMenu(false)
-            setTransitionContextMenu(false)
-            setNoneContextMenu(false)
-          }
-        
-        if (evt.buttons === 1) {
-          if (props.interactMode === 1) {
-            addState(evt.pageX, evt.pageY)
-          } else if (props.interactMode === 2) {
-            if (firstState === undefined) {
-              states.forEach((x, i) => {
-                let guiState = document.getElementById('guiState' + x.id)?.getBoundingClientRect()
-                
-                if (guiState !== undefined) {
-                  if (
-                    offsetTemp.x > guiState.left &&
-                    offsetTemp.x < guiState.right &&
-                    offsetTemp.y > guiState.top &&
-                    offsetTemp.y < guiState.bottom
-                  ) {
-                    setFirstState(x)
-                    let adaptedX = ((x.x) * (scale / 100)) + ((wrapper ? wrapper.clientWidth : window.innerWidth) / 2) - position.x
-                    let adaptedY = ((x.y) * (scale / 100)) + ((wrapper ? wrapper.clientHeight : window.innerHeight - 150) / 2) - position.y
-                    setTempX(adaptedX)
-                    setTempY(adaptedY)
-                    setMouseX(evt.pageX)
-                    setMouseY(evt.pageY)
-                  }
-                }
-              })
-            } else {
-              let targetState = undefined
-              states.forEach((x, i) => {
-                let guiState = document.getElementById('guiState' + x.id)?.getBoundingClientRect()
-                
-                if (guiState !== undefined) {
-                  if (
-                    offsetTemp.x > guiState.left &&
-                    offsetTemp.x < guiState.right &&
-                    offsetTemp.y > guiState.top &&
-                    offsetTemp.y < guiState.bottom
-                  ) {
-                    targetState = x
-                  }
-                }
-              })
-              if (targetState) {
-                props.onAddTransition(firstState, targetState)
-              } 
-              setFirstState(undefined)
+      if (evt.buttons !== 1) { return }
+      let offsetTemp = {x: evt.clientX, y: evt.clientY};
+      
+      switch ( props.interactMode ) {
+        case 0: //click & drag
+          let boundary = isFirefox ? 0.6 : 0.05
+          let selectedState: State | undefined = undefined
+          let selectedTemp: number = -2
+
+          for (let index = 0; index < states.length; index++) {
+            const state = states[index];
+            if (isPointInBox(offsetTemp, 'guiState' + state.id, boundary * scale)) {
+              selectedState = state
+              break;
             }
-          } else if (props.interactMode === 3) {
-            states.forEach((x, i) => {
-              let guiState = document.getElementById('stateCircle' + x.id)?.getBoundingClientRect()
-              
-              if (guiState !== undefined) {
-                if (
-                  offsetTemp.x > guiState.left &&
-                  offsetTemp.x < guiState.right &&
-                  offsetTemp.y > guiState.top &&
-                  offsetTemp.y < guiState.bottom
-                ) {
-                  props.onRemoveState(x.id)
-                }
-              }
-            })
-  
-            props.transitions.forEach((x, i) => {
-              let guiTransition = document.getElementById('guiTransition' + x.id)?.getBoundingClientRect()
-              
-              if (guiTransition !== undefined) {
-                if (
-                  offsetTemp.x > guiTransition.left &&
-                  offsetTemp.x < guiTransition.right &&
-                  offsetTemp.y > guiTransition.top &&
-                  offsetTemp.y < guiTransition.bottom
-                ) {
-                  props.onRemoveTransition(x.id)
-                }
-              }
-            })
+          }
+
+          if (selectedState !== undefined) {
+            offsetTemp.x = offsetTemp.x - (centrePos.x + (selectedState.x * (scale / 100)));
+            offsetTemp.y = offsetTemp.y - (centrePos.y + (selectedState.y * (scale / 100)));
+            selectedTemp = selectedState.id
           } else {
-            let id = -2
+            offsetTemp.x = offsetTemp.x + position.x;
+            offsetTemp.y = offsetTemp.y + position.y;
+          }
+
+          setOffset(offsetTemp)
+          setSelected(selectedTemp)
+          if (firstState !== undefined) { setFirstState(undefined) }
+
+          break;
+        case 1: //add state
+
+          addState(offsetTemp.x, offsetTemp.y)
+          if (firstState !== undefined) { setFirstState(undefined) }
+
+          break;
+        case 2: //add transition
           
-            states.forEach((x, i) => {
-              let guiState = document.getElementById('guiState' + x.id)?.getBoundingClientRect()
-              
-              if (guiState !== undefined) {
-                if (
-                  offsetTemp.x > guiState.left + (0.6 * scale) &&
-                  offsetTemp.x < guiState.right - (0.6 * scale) &&
-                  offsetTemp.y > guiState.top + (0.6 * scale) &&
-                  offsetTemp.y < guiState.bottom - (0.6 * scale)
-                ) {
-                  id = x.id
-                }
+          let newFirstState = firstState
+          for (let index = 0; index < states.length; index++) {
+            const state = states[index];
+            if (isPointInBox(offsetTemp, 'guiState' + state.id, 0)) {
+              if (firstState === undefined) {
+                let adaptedX = (state.x * (scale / 100)) + centrePos.x - position.x
+                let adaptedY = (state.y * (scale / 100)) + centrePos.y - position.y
+                setTempPos({x: adaptedX, y: adaptedY})
+                setMousePos(offsetTemp)
+                newFirstState = state
+              } else {
+                props.onAddTransition(firstState, state)
+                newFirstState = undefined
               }
-            })
-            if (id >= 0) {
-                let state = states.filter(state => state.id == id)[0];
-                offsetTemp.x = offsetTemp.x - (((wrapper ? wrapper.clientWidth : window.innerWidth) / 2) + (state.x * (scale / 100)));
-                offsetTemp.y = offsetTemp.y - (((wrapper ? wrapper.clientHeight : window.innerHeight - 150) / 2) + (state.y * (scale / 100)));
-                setOffset(offsetTemp);
-                setSelected(id);
-            } else if (id === -2) {
-              offsetTemp.x = offsetTemp.x + position.x;
-              offsetTemp.y = offsetTemp.y + position.y;
-              
-              setOffset(offsetTemp);
-              setSelected(-2);
+              break;
             }
           }
-        }
+          setFirstState(newFirstState)
+
+          break;
+        case 3: //remove anything
+
+          for (let index = 0; index < states.length; index++) {
+            const state = states[index];
+            if (isPointInBox(offsetTemp, 'stateCircle' + state.id, 0)) {
+              props.onRemoveState(state.id)
+              return;
+            }
+          }
+
+          for (let index = 0; index < props.transitions.length; index++) {
+            const transition = props.transitions[index];
+            if (isPointInBox(offsetTemp, 'guiTransition' + transition.id, 0)) {
+              props.onRemoveTransition(transition.id)
+              return;
+            }
+          }
+
+          if (firstState !== undefined) { setFirstState(undefined) }
+          break;
+        default: //error
+          console.log("ERROR: interactive mode is impossible number")
+          break;
       }
+      
+      setContextMenu(0)
+    }
   
-      const drag = (evt:React.MouseEvent<SVGSVGElement, MouseEvent>) => {
-        let coord = getMousePosition(evt);
-        if (props.interactMode === 2 && firstState !== undefined) {
-          setMouseX(evt.pageX)
-          setMouseY(evt.pageY)
-        }
-        if (selected >= 0) {
-          let x = (((coord.x) - ((wrapper ? wrapper.clientWidth : window.innerWidth) / 2)) - offset.x) / (scale / 100);
-          let y = ((((coord.y) - ((wrapper ? wrapper.clientHeight : window.innerHeight - 150) / 2)) - offset.y) / (scale / 100)) + 44;
-          props.onStatePosUpdate(selected, x, y)
-
-        } else  if (selected === -2){
-          let newX = (offset.x - coord.x);
-          let newY = (offset.y - coord.y) - 44;
-          setPosition({x: newX, y: newY})
-          props.onPosUpdate({x: newX, y: newY})
-        }
+    const drag = (evt:React.MouseEvent<SVGSVGElement, MouseEvent>) => {
+      if (props.interactMode === 2 && firstState !== undefined) {
+        setMousePos({x: evt.clientX, y: evt.clientY})
+        return;
       }
 
-      const zoom = (e: WheelEvent) => {
-        //e.preventDefault()
-        let gui = document.getElementById('gui')?.getBoundingClientRect()
-        let txt = document.getElementById('txtWrapper')?.getBoundingClientRect()
-        let newScale = scale
+      let coord = getMousePosition(evt);
+      let newX = (offset.x - coord.x);
+      let newY = (offset.y - coord.y) - headerOffset;
 
-        if (
-          gui !== undefined &&
-          txt !== undefined &&
-          e.pageX > txt.right &&
-          e.pageX < gui.right &&
-          e.pageY > gui.top &&
-          e.pageY < gui.bottom
-        ) {
-          if (e.deltaY < 0 && scale < 300) {
-            newScale += 10
-          } else if (e.deltaY > 0 && scale > 20) {
-            newScale -= 10
-          }
-
-          if (firstState) {
-            let guiState = document.getElementById('guiState' + firstState.id)?.getBoundingClientRect()
-            if (guiState) {
-              let adaptedX = ((firstState.x) * (newScale / 100)) + ((wrapper ? wrapper.clientWidth : window.innerWidth) / 2) + offset.x
-              let adaptedY = ((firstState.y) * (newScale / 100)) + ((wrapper ? wrapper.clientHeight : window.innerHeight - 150) / 2) + offset.y
-              setTempX(adaptedX)
-              setTempY(adaptedY)
-              setMouseX(e.pageX)
-              setMouseY(e.pageY)
-            }
-          }
-          setScale(newScale)
-          props.onScaleUpdate(newScale)
+      if (selected >= 0) {
+        newX = ((coord.x - centrePos.x) - offset.x) / (scale / 100);
+        newY = (((coord.y - centrePos.y) - offset.y) / (scale / 100)) + headerOffset;
+        props.onStatePosUpdate(selected, newX, newY)
+        let stateElem = document.getElementById('guiState' + selected)
+        if (stateElem) {
+          stateElem.style.transform = "translate(5, 5); scale(1);"
+          console.log("yuup")
         }
+        return;
+      }
+
+      if (selected == -2) {
+        props.onPosUpdate({x: newX, y: newY})
+        setPosition({x: newX, y: newY})
+      }
     }
 
-      document.addEventListener("wheel", (e: WheelEvent) => {zoom(e)})
-    
+    const zoom = (evt: WheelEvent) => {
+      let txt = document.getElementById('txtWrapper')?.getBoundingClientRect()
+      let options = document.getElementById('optionsWrapper')?.getBoundingClientRect()
+      let sim = document.getElementById('simWrapper')?.getBoundingClientRect()
+      let newScale = scale
 
-      const contextMenu = (event:React.MouseEvent<SVGCircleElement|SVGTextElement, MouseEvent>) => {
-        event.preventDefault()
-        let state = false
-        let transition = false
-
-        states.forEach((x, i) => {
-          if (!state) {
-            let guiState = document.getElementById('guiState' + x.id)?.getBoundingClientRect()
-          
-            if (guiState !== undefined) {
-              if (
-                event.pageX > guiState.left + (0.6 * scale) &&
-                event.pageX < guiState.right - (0.6 * scale) &&
-                event.pageY > guiState.top + (0.6 * scale) &&
-                event.pageY < guiState.bottom - (0.6 * scale)
-              ) {
-                setStateContextMenu(true)
-                state = true
-                setCMState(x)
-              }
-            }
-          }
-        })
-        if (!state) {
-          props.transitions.forEach((x, i) => {
-            if (!transition) {
-              let guiTransition = document.getElementById('guiTransition' + x.id)?.getBoundingClientRect()
-          
-              if (guiTransition !== undefined) {
-                if (
-                  event.pageX > guiTransition.left &&
-                  event.pageX < guiTransition.right &&
-                  event.pageY > guiTransition.top &&
-                  event.pageY < guiTransition.bottom
-                ) {
-                  setTransitionContextMenu(true)
-                  transition = true
-                  setCMTransition(x)
-                }
-              }
-            }
-          });
-
-          if (!transition) {
-            setNoneContextMenu(true)
-          }
+      if (
+        txt !== undefined &&
+        sim !== undefined &&
+        options !== undefined &&
+        evt.pageX > txt.right &&
+        evt.pageX < options.left &&
+        evt.pageY > headerOffset &&
+        evt.pageY < sim.top
+      ) {
+        if (evt.deltaY < 0 && scale < 300) {
+          newScale += 10
+        } else if (evt.deltaY > 0 && scale > 20) {
+          newScale -= 10
         }
 
-        setContextMenuPos({x: event.pageX, y: event.pageY})
+        if (firstState) {
+          let guiState = document.getElementById('guiState' + firstState.id)?.getBoundingClientRect()
+          if (guiState !== undefined) {
+            let adaptedX = (firstState.x * (newScale / 100)) + centrePos.x + offset.x
+            let adaptedY = (firstState.y * (newScale / 100)) + centrePos.y + offset.y
+            setTempPos({x: adaptedX, y: adaptedY})
+            setMousePos({x: evt.clientX, y: evt.clientY})
+          }
+        }
+        setScale(newScale)
+        props.onScaleUpdate(newScale)
+      }
+    }
+
+    const handleContextMenu = (evt:React.MouseEvent<SVGCircleElement|SVGTextElement, MouseEvent>) => {
+      evt.preventDefault()
+      let boundary = isFirefox ? 0.6 : 0.05
+      let contextMenu = 1
+      for (let index = 0; index < states.length; index++) {
+        const state = states[index];
+        if (isPointInBox({x: evt.clientX, y: evt.clientY}, 'guiState' + state.id, boundary)) {
+          contextMenu = 2
+          setCMState(state)
+          break;
+        }
+      }
+
+      if (contextMenu === 1) {
+        for (let index = 0; index < props.transitions.length; index++) {
+          const transition = props.transitions[index];
+          if (isPointInBox({x: evt.clientX, y: evt.clientY}, 'guiTransition' + transition.id, 0)) {
+            contextMenu = 3
+            setCMTransition(transition)
+            break;
+          }
+        }
+      }
+
+      setContextMenu(contextMenu)
+      setContextMenuPos({x: evt.clientX, y: evt.clientY})
     }
 
     const addState = (x: number, y: number) => {
-      let width = wrapper ? wrapper.clientWidth : window.innerWidth
-      let height = wrapper ? wrapper.clientHeight : window.innerHeight - 150
       let s = scale / 100
-      let adaptedX = ((x - (width / 2) + position.x) / s);
-      let adaptedY = ((y - (height / 2) + position.y) / s);
+      let adaptedX = ((x - centrePos.x + position.x) / s);
+      let adaptedY = ((y - centrePos.y + position.y) / s) - headerOffset;
       props.onAddState(adaptedX, adaptedY)
     }
 
+
+    document.addEventListener("wheel", (evt: WheelEvent) => {zoom(evt)})
     return (
       <>
-        <svg id='gui' className={props.colour + ' gui'} onMouseMove={(e) => drag(e)} onMouseUp={() => setSelected(-1)} onMouseDown={(e:React.MouseEvent) => handleMouseDown(e)} onContextMenu={(e:any) => {contextMenu(e)}}>
+        <svg id='gui' className={props.colour + ' gui'} onMouseMove={(e) => drag(e)} onMouseUp={() => setSelected(-1)} onMouseDown={(e:React.MouseEvent) => handleMouseDown(e)} onContextMenu={(e:any) => {handleContextMenu(e)}}>
           <defs>
             <marker 
               id='head' 
@@ -352,7 +309,7 @@ export const GuiWrapper = (props: GuiWrapperProps) => {
           </defs>
           <rect className={'xAxis'} y={'50%'} width={'100vw'} height={'5px'} transform={"translate(0, " + -position.y + ") scale(1, " + scale / 100 + ")"} />
           <rect className={'yAxis'} x={'50%'} width={'5px'} height={'100vh'} transform={"translate(" + -position.x + ", 0) scale(" + scale / 100 + ", 1)"} />
-          {firstState && <path d={'M ' + String(tempX) + ',' + String(tempY) + ' L ' + String(mouseX) + ',' + String(mouseY - 40)} strokeWidth={String(scale / 10) + 'px'} className='tempConnection'/>}
+          {firstState && <path d={'M ' + String(tempPos.x) + ',' + String(tempPos.y) + ' L ' + String(mousePos.x) + ',' + String(mousePos.y - 40)} strokeWidth={String(scale / 10) + 'px'} className='tempConnection'/>}
           {connections.map((x, i) => {
               let cState = states.find(s => s.id === x.cStateId)
               let nState = states.find(s => s.id === x.nStateId)
@@ -365,19 +322,17 @@ export const GuiWrapper = (props: GuiWrapperProps) => {
               }
             })}
             {states.map((x, i) => {
-                return (
-                  <GuiState colour={props.colour} key={x.id} state={x} width={wrapper ? wrapper.clientWidth : window.innerWidth} height={wrapper ? wrapper.clientHeight : window.innerHeight} scale={scale / 100} offset={position}  onStatePosUpdate={(id: number, x: number, y: number) => {props.onStatePosUpdate(id, x, y)}} traversals={props.traversals}/>
-                )
-            
+              let stateElem = <GuiState colour={props.colour} key={x.id} state={x} width={wrapper ? wrapper.clientWidth : window.innerWidth} height={wrapper ? wrapper.clientHeight : window.innerHeight} scale={scale / 100} offset={position}  onStatePosUpdate={(id: number, x: number, y: number) => {props.onStatePosUpdate(id, x, y)}} traversals={props.traversals}/>
+              return stateElem
             })}
         </svg>
         <GuiButtons colour={props.colour} interactMode={props.interactMode} onInteractModeUpdate={(value: number) => {props.onInteractModeUpdate(value)}} />
-        {noneContextMenu && <CMNone
+        {(contextMenu === 1) && <CMNone
             colour={props.colour} 
             left={contextMenuPos.x}
             top={contextMenuPos.y}
             onAddState={() => {addState(contextMenuPos.x, contextMenuPos.y)}}/>}
-        {stateContextMenu && <CMState
+        {(contextMenu === 2) && <CMState
             colour={props.colour} 
             left={contextMenuPos.x}
             top={contextMenuPos.y}
@@ -387,7 +342,7 @@ export const GuiWrapper = (props: GuiWrapperProps) => {
             onInitUpdate={(id: number, value: boolean) => {props.onInitUpdate(id, value)}}
             onAcceptUpdate={(id: number, value: boolean) => {props.onAcceptUpdate(id, value)}}
             onAlternateUpdate={(id: number, value: boolean) => {props.onAlternateUpdate(id, value)}}/>}
-        {transitionContextMenu && <CMTransition 
+        {(contextMenu === 3) && <CMTransition 
             colour={props.colour} 
             left={contextMenuPos.x}
             top={contextMenuPos.y}

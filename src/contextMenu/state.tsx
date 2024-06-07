@@ -40,7 +40,7 @@ export const CMState = (props: CMStateProps) => {
       }
     
     return (
-        <div id='stateContextMenu' className={props.colour + ' contextMenu reveal'} style={{left: props.left, top: props.top}} >
+        <div id='contextMenu' className={props.colour + ' contextMenu reveal'} style={{left: props.left, top: props.top}} >
             <div className='contextMenuLabel'>name <input className={props.colour + ' contextMenuInput'} type='text' value={name} onChange={(e) => setName(e.currentTarget.value)} onKeyDown={(e) => handleName(e)} /></div>
             <div className='contextMenuLabel'>Initial? <input className={props.colour + ' contextMenuCheckBox'} type='checkBox' checked={props.state.initial} onChange={() => {toggleInit()}}/></div>
             <div className='contextMenuLabel'>Accepting? <input className={props.colour + ' contextMenuCheckBox'} type='checkBox' checked={props.state.accepting} onChange={() => {toggleAccept()}}/></div>
