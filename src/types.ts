@@ -21,6 +21,16 @@ export type Transition = {
     nInputHead: number
 }
 
+export type Alphabet = {
+    startChar: string | undefined,
+    endChar: string | undefined,
+    callChars: string[],
+    returnChars: string[],
+    internalChars: string[],
+    miscChars: string[],
+    allChars: string[]
+}
+
 export type RegularPA = {
     states: State[]
     transitions: Transition[]

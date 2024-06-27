@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Transitions } from './transitions'
 import { State, Transition } from '../types'
 import { States } from './states'
+import { Alphabet } from './alphabet'
 
 type WrapperProps = {
     transitions: Transition[],
@@ -70,6 +71,10 @@ export const Wrapper = (props: WrapperProps) => {
                 onAcceptUpdate={(id: number, value: boolean) => {props.onAcceptUpdate(id, value)}}
                 onAlternateUpdate={(id: number, value: boolean) => {props.onAlternateUpdate(id, value)}}
                 onAdd={() => {props.onAddState()}}
+                />
+                <Alphabet 
+                colour={props.colour}
+                alphabet={{startChar:'A', endChar:'B', callChars:[], returnChars:[], internalChars:[], miscChars:['C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T'], allChars:['A', 'B', 'C', 'D']}}
                 />
                 </div>
             ) : (<></>)
