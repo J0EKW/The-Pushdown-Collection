@@ -1,6 +1,6 @@
 import React, { useEffect, useReducer, useState } from 'react';
 import './App.css';
-import { Connection, State, Transition, Traversal } from './types';
+import { Alphabet, Connection, State, Transition, Traversal } from './types';
 import { Wrapper as TxtWrapper } from './txt/wrapper';
 import { Wrapper as SimWrapper } from './sim/wrapper';
 import { add as tAdd, remove as tRemove, updateState, updateInputHead, updateStack, updateInput, findDuplicateTransition, findInvalidAlphabetUse } from './lib/transitions';
@@ -32,6 +32,7 @@ function App() {
   const [defaultTraversal, setDefaultTraversal] = useState<Traversal>({id: 0, history: [-1], stateId: 0, transitionId: -1, stack: stacks, inputHead: options['bookendInput'].value ? 1 : 0, end: 0})
   const [traversal, setTraversal] = useState<Traversal[]>([defaultTraversal])
   const [colour, setColour] = useState<string>('light')
+  const [alphabet, setAlphabet] = useState<Alphabet>({startChar:'S', endChar:'E', callChars:[], returnChars:[], internalChars:[], miscChars:['0', '1'], allChars:['S', 'E', '0', '1']})
   
   const stackCountMax = 2
 
@@ -169,6 +170,38 @@ function App() {
     let newStates = sAdd([...states])
     newStates = updatePosition(newStates[newStates.length - 1].id, x, y, [...newStates])
     setStates(newStates)
+  }
+
+  const clientAlphabetUpdate = (type: number, char: string, index: number) => {
+    let newAlphabet = alphabet
+
+    newAlphabet.allChars[index] = char
+    switch (type) {
+      case 0:
+        newAlphabet.miscChars[index - 2] = char
+        break;
+      case 1:
+        newAlphabet.callChars[index - (2 + newAlphabet.miscChars.length)] = char
+        break;
+      case 2:
+        newAlphabet.returnChars[index - (2 + newAlphabet.miscChars.length + newAlphabet.callChars.length)] = char
+        break;
+      case 3:
+        newAlphabet.internalChars[index - (2 + newAlphabet.miscChars.length + newAlphabet.callChars.length + newAlphabet.returnChars.length)] = char
+        break;
+      case 4:
+        newAlphabet.startChar = char
+        break;
+      case 5:
+        newAlphabet.endChar = char
+        break;
+    
+      default:
+        break;
+    }
+
+    console.log(newAlphabet)
+    setAlphabet(newAlphabet)
   }
 
   const clientSimRun = () => {
@@ -412,6 +445,7 @@ useEffect(() => {
           states={states}
           stackCount={options['stackCount'].value}
           colour={colour}
+          alphabet={alphabet}
           onRemoveTransition={(id: number) => {clientRemoveTransition(id)}}
           onCInputUpdate={(id: number, value: string) => {clientUpdateCInput(id, value)}}
           onCStateUpdate={(id: number, name: string) => {clientUpdateCState(id, name)}}
@@ -425,7 +459,8 @@ useEffect(() => {
           onInitUpdate={(id: number, value: boolean) => {clientUpdateInit(id, value)}}
           onAcceptUpdate={(id: number, value: boolean) => {clientUpdateAccepting(id, value)}}
           onAlternateUpdate={(id: number, value: boolean) => {clientUpdateAlternating(id, value)}}
-          onAddState={() => {clientAddState()}}/>
+          onAddState={() => {clientAddState()}}
+          onAlphabetUpdate={(type: number, char: string, index: number) => {clientAlphabetUpdate(type, char, index)}}/>
             <OptionWrapper
               colour={colour}
             />

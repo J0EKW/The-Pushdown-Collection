@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Transitions } from './transitions'
-import { State, Transition } from '../types'
+import { Alphabet as AlphabetType, State, Transition } from '../types'
 import { States } from './states'
 import { Alphabet } from './alphabet'
 
@@ -9,6 +9,7 @@ type WrapperProps = {
     states: State[],
     stackCount: number,
     colour: string,
+    alphabet: AlphabetType,
     onRemoveTransition: Function,
     onCInputUpdate: Function,
     onCStateUpdate: Function,
@@ -22,7 +23,8 @@ type WrapperProps = {
     onInitUpdate: Function,
     onAcceptUpdate: Function,
     onAlternateUpdate: Function,
-    onAddState: Function
+    onAddState: Function,
+    onAlphabetUpdate: Function
 }
 
 export const Wrapper = (props: WrapperProps) => {
@@ -74,7 +76,8 @@ export const Wrapper = (props: WrapperProps) => {
                 />
                 <Alphabet 
                 colour={props.colour}
-                alphabet={{startChar:'A', endChar:'B', callChars:[], returnChars:[], internalChars:[], miscChars:['C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T'], allChars:['A', 'B', 'C', 'D']}}
+                alphabet={props.alphabet}
+                onAlphabetUpdate={(type: number, char: string, oldChar: string) => {props.onAlphabetUpdate(type, char, oldChar)}}
                 />
                 </div>
             ) : (<></>)
