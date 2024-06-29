@@ -174,31 +174,68 @@ function App() {
 
   const clientAlphabetUpdate = (type: number, char: string, index: number) => {
     let newAlphabet = alphabet
+    let newIndex = 0
 
-    newAlphabet.allChars[index] = char
+    if (newAlphabet.allChars.find((a, i) => {return (a === char && i != index)}) === char) {
+      console.log("The alphabet must be a distinct set, no duplicates allowed")
+      return
+    }
+
     switch (type) {
       case 0:
-        newAlphabet.miscChars[index - 2] = char
+        newIndex = index - 2
+        if (char.length === 0) {
+          newAlphabet.miscChars = newAlphabet.miscChars.filter(c => c !== newAlphabet.miscChars[newIndex])
+        } else {
+          newAlphabet.miscChars[newIndex] = char
+        }
         break;
       case 1:
-        newAlphabet.callChars[index - (2 + newAlphabet.miscChars.length)] = char
+        newIndex = index - (2 + newAlphabet.miscChars.length)
+        if (char.length === 0) {
+          newAlphabet.callChars = newAlphabet.callChars.filter(c => c !== newAlphabet.callChars[newIndex])
+        } else {
+          newAlphabet.callChars[newIndex] = char
+        }
         break;
       case 2:
-        newAlphabet.returnChars[index - (2 + newAlphabet.miscChars.length + newAlphabet.callChars.length)] = char
+        newIndex = index - (2 + newAlphabet.miscChars.length + newAlphabet.callChars.length)
+        if (char.length === 0) {
+          newAlphabet.returnChars = newAlphabet.returnChars.filter(c => c !== newAlphabet.returnChars[newIndex])
+        } else {
+          newAlphabet.returnChars[newIndex] = char
+        }
         break;
       case 3:
-        newAlphabet.internalChars[index - (2 + newAlphabet.miscChars.length + newAlphabet.callChars.length + newAlphabet.returnChars.length)] = char
+        newIndex = index - (2 + newAlphabet.miscChars.length + newAlphabet.callChars.length + newAlphabet.returnChars.length)
+        if (char.length === 0) {
+          newAlphabet.internalChars = newAlphabet.internalChars.filter(c => c !== newAlphabet.internalChars[newIndex])
+        } else {
+          newAlphabet.internalChars[newIndex] = char
+        }
         break;
       case 4:
-        newAlphabet.startChar = char
+        if (char.length === 0) {
+          console.log("The front char cannot be empty")
+          return
+        } else {
+          newAlphabet.startChar = char
+        }
+        
         break;
       case 5:
-        newAlphabet.endChar = char
+        if (char.length === 0) {
+          console.log("The end char cannot be empty")
+          return
+        } else {
+          newAlphabet.endChar = char
+        }
         break;
     
       default:
         break;
     }
+    newAlphabet.allChars[index] = char
 
     console.log(newAlphabet)
     setAlphabet(newAlphabet)
