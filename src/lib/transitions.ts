@@ -66,7 +66,7 @@ export const updateInput = (id: number, value: string, transitions: Transition[]
       transitions[index].nStack = Array(2).fill('')
       console.log("return")
     } else if (alphabet['internalChar'].indexOf(value) !== -1) {
-      transitions[index].nStack = Array(2).fill(value)
+      transitions[index].nStack = transitions[index].cStack
     }
   }
   console.log(transitions[index])

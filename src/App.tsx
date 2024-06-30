@@ -103,8 +103,10 @@ function App() {
   }
 
   const clientUpdateNStack = (transitionId: number, value: string, stackIndex: number) => {
-    let newTransitions = updateStack(transitionId, value, false, stackIndex, [...transitions], options['forceDeterministic'].value)
-    setTransitions(newTransitions)
+    if (options['forceVisibly'].value === false) {
+      let newTransitions = updateStack(transitionId, value, false, stackIndex, [...transitions], options['forceDeterministic'].value)
+      setTransitions(newTransitions)
+    }
   }
 
   const clientUpdateInputHead = (transitionId: number, value: number) => {
