@@ -15,15 +15,13 @@ type GuiStateProps = {
 export const GuiState = (props: GuiStateProps) => {
     let state = props.state
     let target = props.traversals.filter(t => t.stateId === state.id).length > 0
-    
-    let xTrans = ((state.x - 100) * props.scale - props.offset.x)
-    let yTrans = (((state.y - 100) * props.scale - props.offset.y))
-    let sTrans = props.scale
+    let adaptedX = ((state.x - 100) * props.scale - props.offset.x)
+    let adaptedY = ((state.y - 100) * props.scale - props.offset.y)
 
     if (state.alternating) {
         return(
-            <g id={'gState' + state.id} style={{transform: `translate(${xTrans}px, ${yTrans}px) scale(${sTrans})`}}>
-                <svg id={'guiState' + state.id} className={'universal guiState'} x={"50%"} y={"50%"} width={'200px'} height={'200px'}>
+            <g id={'gState' + state.id} className={'guiState'} style={{transform: `translate(${adaptedX}px, ${adaptedY}px) scale(${props.scale})`}}>
+                <svg id={'guiState' + state.id} className={'universal'} x={"50%"} y={"50%"} width={'200px'} height={'200px'}>
                     {state.accepting && <rect id={'accept' + state.id} className={'alternating draggable svg'} x={"30%"} y={"30%"} width={"40%"} height={"40%"} strokeWidth="1%"/>}
                     {state.initial && <path id={'start' + state.id} className={'initial'} d={"M20,70 L60,100 L20,130, Z"} strokeWidth="0%"/>}
                     <rect id={'StateCircle' + state.id} className={'stateCircle draggable svg ' + (target === true ? 'target' : 'nontarget')} x={"33%"} y={"33%"} width={"34%"} height={"34%"} strokeWidth="1%"/>
@@ -33,8 +31,8 @@ export const GuiState = (props: GuiStateProps) => {
         )
     }
     return (
-        <g id={'gState' + state.id} style={{transform: `translate(${xTrans}px, ${yTrans}px) scale(${sTrans})`}}>
-            <svg id={'guiState' + state.id} className={'existential guiState'} x={"50%"} y={"50%"} width={'200px'} height={'200px'} >
+        <g id={'gState' + state.id} className={'guiState'} style={{transform: `translate(${adaptedX}px, ${adaptedY}px) scale(${props.scale})`}}>
+            <svg id={'guiState' + state.id} className={'existential'} x={"50%"} y={"50%"} width={'200px'} height={'200px'} >
                 {state.accepting && <circle id={'accept' + state.id} className={'alternating draggable svg'} cx={"50%"} cy={"50%"} r={"26%"} strokeWidth="1%"/>}
                 {state.initial && <path id={'start' + state.id} className={'initial'} d={"M20,70 L60,100 L20,130, Z"} strokeWidth="0%"/>}
                 <circle id={'stateCircle' + state.id} className={'stateCircle draggable svg ' + (target === true ? 'target' : 'nontarget')} cx={"50%"} cy={"50%"} r={'20%'} strokeWidth="1%"/>
