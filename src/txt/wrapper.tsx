@@ -55,6 +55,7 @@ export const Wrapper = (props: WrapperProps) => {
                 transitions={transitions}
                 states={states}
                 stackCount={props.stackCount}
+                alphabet={alphabet}
                 colour={props.colour}
                 onRemove={(id: number) => {props.onRemoveTransition(id)}}
                 onCInputUpdate={(id: number, value: string) => {props.onCInputUpdate(id, value)}}

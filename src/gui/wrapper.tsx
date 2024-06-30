@@ -247,7 +247,7 @@ export const GuiWrapper = (props: GuiWrapperProps) => {
       let contextMenu = 1
       for (let index = 0; index < states.length; index++) {
         const state = states[index];
-        if (isPointInBox({x: evt.clientX, y: evt.clientY}, 'guiState' + state.id, boundary)) {
+        if (isPointInBox({x: evt.clientX, y: evt.clientY}, 'guiState' + state.id, boundary * scale)) {
           contextMenu = 2
           setCMState(state)
           break;
