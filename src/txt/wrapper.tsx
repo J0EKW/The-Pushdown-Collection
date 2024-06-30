@@ -9,7 +9,7 @@ type WrapperProps = {
     states: State[],
     stackCount: number,
     colour: string,
-    alphabet: AlphabetType,
+    alphabet: {[id: string]: string[]},
     onRemoveTransition: Function,
     onCInputUpdate: Function,
     onCStateUpdate: Function,
@@ -30,6 +30,7 @@ type WrapperProps = {
 export const Wrapper = (props: WrapperProps) => {
     let transitions = props.transitions
     let states = props.states
+    let alphabet = props.alphabet
 
     const [visible, setVisible] = useState<boolean>(true)
     const [render, setRender] = useState<boolean>(true)
@@ -76,8 +77,8 @@ export const Wrapper = (props: WrapperProps) => {
                 />
                 <Alphabet 
                 colour={props.colour}
-                alphabet={props.alphabet}
-                onAlphabetUpdate={(type: number, char: string, oldChar: string) => {props.onAlphabetUpdate(type, char, oldChar)}}
+                alphabet={alphabet}
+                onAlphabetUpdate={(id: string, char: string, index: number) => {props.onAlphabetUpdate(id, char, index)}}
                 />
                 </div>
             ) : (<></>)

@@ -2,54 +2,22 @@ import React, { useContext, useState } from 'react'
 import { Alphabet as AlphabetType } from '../types'
 import { OptionContext } from '../lib/OptionsContext'
 import { Character } from './character'
+import { AlphabetList } from './alphabetList'
 
 
 type AlphabetProps = {
-    alphabet: AlphabetType,
+    alphabet: {[id: string]: string[]},
     colour:string,
     onAlphabetUpdate: Function
 }
 
 export const Alphabet = (props: AlphabetProps) => {
     const options = useContext(OptionContext)
-    const [tempAlpha, setTempAlpha] = useState<AlphabetType>(props.alphabet)
-    const [tempChar, setTempChar] = useState<string>('')
+    let alphabet = props.alphabet
+    
 
-    const handleTempAlphabet = (e: string, type: number, index: number) => {
-        let newAlphabet = tempAlpha
-        
-        newAlphabet.allChars[index] = e
-        switch (type) {
-        case 0:
-            newAlphabet.miscChars[index] = e
-            break;
-        case 1:
-            newAlphabet.callChars[index] = e
-            break;
-        case 2:
-            newAlphabet.returnChars[index] = e
-            break;
-        case 3:
-            newAlphabet.internalChars[index] = e
-            break;
-        case 4:
-            newAlphabet.startChar = e
-            break;
-        case 5:
-            newAlphabet.endChar = e
-            break;
-        
-        default:
-            break;
-        }
-        console.log(String(e))
-        setTempAlpha(newAlphabet)
-    }
-
-    const handleAlphabet = (e: any, type: number, char: string, index: number) => {
-        if (e.key === 'Enter') {
-            props.onAlphabetUpdate(type, char, index)
-          }
+    const addChar = (id: string) => {
+        props.onAlphabetUpdate(id, '', -1)
     }
 
     return (
@@ -59,28 +27,20 @@ export const Alphabet = (props: AlphabetProps) => {
                 {(options['bookendInput'].value === true) && 
                 <div className='bookendWrapper'>
                     <div className='bookendInput'>
-                        start: <Character char={options['inputFrontChar'].value} colour={props.colour} handleAlphabet={(e: any, char: string) => {handleAlphabet(e, 4, char, 0)}}/>
+                        Start: <Character char={alphabet['startChar'][0]} colour={props.colour} handleAlphabet={(char: string) => {props.onAlphabetUpdate('startChar', char, 0)}}/>
                     </div>
                     <div className='bookendInput'>
-                        end: <Character char={options['inputEndChar'].value} colour={props.colour} handleAlphabet={(e: any, char: string) => {handleAlphabet(e, 5, char, 1)}}/>
+                        End: <Character char={alphabet['endChar'][0]} colour={props.colour} handleAlphabet={(char: string) => {props.onAlphabetUpdate('endChar', char, 0)}}/>
                     </div>
                 </div>
                 }
                 {options['forceVisibly'].value ? 
                 <>
-                <div className='alphabet'>
-                    Call: {props.alphabet.callChars.map((x, i) => {return (<Character char={x} colour={props.colour} handleAlphabet={(e: any, char: string) => {handleAlphabet(e, 0, char, i + 2 + props.alphabet.miscChars.length)}}/>)})}
-                </div>
-                <div className='alphabet'>
-                    Return: {props.alphabet.returnChars.map((x, i) => {return (<Character char={x} colour={props.colour} handleAlphabet={(e: any, char: string) => {handleAlphabet(e, 0, char, i + 2 + props.alphabet.miscChars.length + props.alphabet.callChars.length)}}/>)})}
-                </div>
-                <div className='alphabet'>
-                    Internal: {props.alphabet.internalChars.map((x, i) => {return (<Character char={x} colour={props.colour} handleAlphabet={(e: any, char: string) => {handleAlphabet(e, 0, char, i + 2 + props.alphabet.miscChars.length + props.alphabet.callChars.length + props.alphabet.returnChars.length)}}/>)})}
-                </div>
+                <AlphabetList label={'Call: '} list={alphabet['callChar']} colour={props.colour} handleAlphabet={(char: string, index: number) => {props.onAlphabetUpdate('callChar', char, index)}} addChar={() => {addChar('callChar')}}/>
+                <AlphabetList label={'Return: '} list={alphabet['returnChar']} colour={props.colour} handleAlphabet={(char: string, index: number) => {props.onAlphabetUpdate('returnChar', char, index)}} addChar={() => {addChar('returnChar')}}/>
+                <AlphabetList label={'Internal: '} list={alphabet['internalChar']} colour={props.colour} handleAlphabet={(char: string, index: number) => {props.onAlphabetUpdate('internalChar', char, index)}} addChar={() => {addChar('internalChar')}}/>
                 </> : 
-                <div className='alphabet'>
-                    {tempAlpha.miscChars.map((x, i) => {return (<Character char={x} colour={props.colour} handleAlphabet={(e: any, char: string) => {handleAlphabet(e, 0, char, i + 2)}}/>)})}
-                </div>
+                <AlphabetList label={''} list={alphabet['miscChar']} colour={props.colour} handleAlphabet={(char: string, index: number) => {props.onAlphabetUpdate('miscChar', char, index)}} addChar={() => {addChar('miscChar')}}/>
                 }
             </div>
         </div>

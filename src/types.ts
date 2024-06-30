@@ -22,8 +22,8 @@ export type Transition = {
 }
 
 export type Alphabet = {
-    startChar: string | undefined,
-    endChar: string | undefined,
+    startChar: string,
+    endChar: string,
     callChars: string[],
     returnChars: string[],
     internalChars: string[],

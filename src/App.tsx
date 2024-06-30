@@ -12,7 +12,9 @@ import { MotionPathPlugin } from "gsap/MotionPathPlugin";
 import { OptionWrapper } from './options/Wrapper';
 import DefaultOptions from './lib/DefaultOptions';
 import optionsReducer from './lib/OptionsReducer';
-import { OptionContext, OptionDispatchContext } from './lib/OptionsContext';
+import { OptionContext, OptionDispatchContext, AlphabetContext, AlphabetDispatchContext } from './lib/OptionsContext';
+import alphabetReducer from './lib/AlphabetReducer';
+import DefaultAlphabet from './lib/DefaultAlphabet';
 gsap.registerPlugin(MotionPathPlugin);
 
 
@@ -32,8 +34,10 @@ function App() {
   const [defaultTraversal, setDefaultTraversal] = useState<Traversal>({id: 0, history: [-1], stateId: 0, transitionId: -1, stack: stacks, inputHead: options['bookendInput'].value ? 1 : 0, end: 0})
   const [traversal, setTraversal] = useState<Traversal[]>([defaultTraversal])
   const [colour, setColour] = useState<string>('light')
-  const [alphabet, setAlphabet] = useState<Alphabet>({startChar:'S', endChar:'E', callChars:[], returnChars:[], internalChars:[], miscChars:['0', '1'], allChars:['S', 'E', '0', '1']})
+
+  //const [alphabet, setAlphabet] = useState<Alphabet>({startChar:'S', endChar:'E', callChars:[], returnChars:[], internalChars:[], miscChars:['0', '1'], allChars:['S', 'E', '0', '1']})
   
+  const [alphabet, alphabetDispatch] = useReducer(alphabetReducer, DefaultAlphabet)
   const stackCountMax = 2
 
   const arrayEqual = (a: any[], b: any[]): boolean => {
@@ -172,73 +176,18 @@ function App() {
     setStates(newStates)
   }
 
-  const clientAlphabetUpdate = (type: number, char: string, index: number) => {
-    let newAlphabet = alphabet
-    let newIndex = 0
-
-    if (newAlphabet.allChars.find((a, i) => {return (a === char && i != index)}) === char) {
-      console.log("The alphabet must be a distinct set, no duplicates allowed")
-      return
+  const clientAlphabetUpdate = (id: string, char: string, index: number) => {
+    let typeParam = 'update'
+    if (index === -1) {
+      typeParam = 'add'
+    } else if (char.length === 0) {
+      typeParam = 'remove'
     }
-
-    switch (type) {
-      case 0:
-        newIndex = index - 2
-        if (char.length === 0) {
-          newAlphabet.miscChars = newAlphabet.miscChars.filter(c => c !== newAlphabet.miscChars[newIndex])
-        } else {
-          newAlphabet.miscChars[newIndex] = char
-        }
-        break;
-      case 1:
-        newIndex = index - (2 + newAlphabet.miscChars.length)
-        if (char.length === 0) {
-          newAlphabet.callChars = newAlphabet.callChars.filter(c => c !== newAlphabet.callChars[newIndex])
-        } else {
-          newAlphabet.callChars[newIndex] = char
-        }
-        break;
-      case 2:
-        newIndex = index - (2 + newAlphabet.miscChars.length + newAlphabet.callChars.length)
-        if (char.length === 0) {
-          newAlphabet.returnChars = newAlphabet.returnChars.filter(c => c !== newAlphabet.returnChars[newIndex])
-        } else {
-          newAlphabet.returnChars[newIndex] = char
-        }
-        break;
-      case 3:
-        newIndex = index - (2 + newAlphabet.miscChars.length + newAlphabet.callChars.length + newAlphabet.returnChars.length)
-        if (char.length === 0) {
-          newAlphabet.internalChars = newAlphabet.internalChars.filter(c => c !== newAlphabet.internalChars[newIndex])
-        } else {
-          newAlphabet.internalChars[newIndex] = char
-        }
-        break;
-      case 4:
-        if (char.length === 0) {
-          console.log("The front char cannot be empty")
-          return
-        } else {
-          newAlphabet.startChar = char
-        }
-        
-        break;
-      case 5:
-        if (char.length === 0) {
-          console.log("The end char cannot be empty")
-          return
-        } else {
-          newAlphabet.endChar = char
-        }
-        break;
-    
-      default:
-        break;
-    }
-    newAlphabet.allChars[index] = char
-
-    console.log(newAlphabet)
-    setAlphabet(newAlphabet)
+    alphabetDispatch({
+      type: typeParam,
+      id: id,
+      params: { char, index }
+  })
   }
 
   const clientSimRun = () => {
@@ -497,7 +446,7 @@ useEffect(() => {
           onAcceptUpdate={(id: number, value: boolean) => {clientUpdateAccepting(id, value)}}
           onAlternateUpdate={(id: number, value: boolean) => {clientUpdateAlternating(id, value)}}
           onAddState={() => {clientAddState()}}
-          onAlphabetUpdate={(type: number, char: string, index: number) => {clientAlphabetUpdate(type, char, index)}}/>
+          onAlphabetUpdate={(id: string, char: string, index: number) => {clientAlphabetUpdate(id, char, index)}}/>
             <OptionWrapper
               colour={colour}
             />
