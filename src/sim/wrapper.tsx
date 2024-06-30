@@ -9,8 +9,9 @@ type WrapperProps = {
     input: string,
     stacks: string[],
     currentTraversals: Traversal[],
-    states: State[]
-    haltCond: boolean
+    states: State[],
+    haltCond: boolean,
+    alphabet: {[id: string]: string[]},
     onInputUpdate: Function,
     onRun: Function,
     onStep: Function,
@@ -26,6 +27,7 @@ export const Wrapper = (props: WrapperProps) => {
         colour={props.colour}
         input={props.input}
         stacks={props.stacks}
+        alphabet={props.alphabet}
         onInputUpdate={(value: string) => {props.onInputUpdate(value)}}
         />
         <Buttons

@@ -1,6 +1,6 @@
 
 const alphabetReducer = (alphabet: {[id: string]: string[]}, action: {type: string, id: string, params: any}) => {
-    console.log(alphabet)
+    
     switch (action.type) {
         case 'add' : {
             let newAlphabet = {...alphabet}
@@ -8,12 +8,12 @@ const alphabetReducer = (alphabet: {[id: string]: string[]}, action: {type: stri
 
             if (typeof char === "string" && typeof index === "number") {
                 let duplicates = newAlphabet['allChar'].filter(c => {return (c === char)})
-                if (duplicates.length > 1) {
+                if ((char !== "" && duplicates.length > 0) || (char === "" && duplicates.length > 1)) {
                     console.log("Duplicate characters are not allowed")
                     return alphabet
                 }
-                newAlphabet[action.id].push('')
-                newAlphabet['allChar'].push('')
+                newAlphabet[action.id].push(char)
+                newAlphabet['allChar'].push(char)
             }
             return newAlphabet
         }

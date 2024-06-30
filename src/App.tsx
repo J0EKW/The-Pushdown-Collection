@@ -183,11 +183,13 @@ function App() {
     } else if (char.length === 0) {
       typeParam = 'remove'
     }
+    console.log(alphabet)
     alphabetDispatch({
       type: typeParam,
       id: id,
       params: { char, index }
-  })
+    })
+    console.log(alphabet)
   }
 
   const clientSimRun = () => {
@@ -448,24 +450,26 @@ useEffect(() => {
           onAlternateUpdate={(id: number, value: boolean) => {clientUpdateAlternating(id, value)}}
           onAddState={() => {clientAddState()}}
           onAlphabetUpdate={(id: string, char: string, index: number) => {clientAlphabetUpdate(id, char, index)}}/>
-            <OptionWrapper
-              colour={colour}
-            />
-            <SimWrapper
-              colour={colour}
-              input={input}
-              stacks={stacks}
-              currentTraversals={currentTraversal}
-              states={states}
-              haltCond={options['haltCondition'].value}
-              onInputUpdate={(value: string) => {setInput(value)}}
-              onRun={() => {clientSimRun()}}
-              onStep={() => {clientSimStep()}}
-              onReset={() => {reset()}}
-              setSelected={(value: number) => {setSelectedTraversal(value)}}
-            />
-          </OptionDispatchContext.Provider>
-        </OptionContext.Provider>
+      <OptionWrapper
+        onAlphabetUpdate={(id: string, char: string, index: number) => {clientAlphabetUpdate(id, char, index)}}
+        colour={colour}
+      />
+      <SimWrapper
+        colour={colour}
+        input={input}
+        stacks={stacks}
+        currentTraversals={currentTraversal}
+        states={states}
+        haltCond={options['haltCondition'].value}
+        alphabet={alphabet}
+        onInputUpdate={(value: string) => {setInput(value)}}
+        onRun={() => {clientSimRun()}}
+        onStep={() => {clientSimStep()}}
+        onReset={() => {reset()}}
+        setSelected={(value: number) => {setSelectedTraversal(value)}}
+      />
+      </OptionDispatchContext.Provider>
+      </OptionContext.Provider>
     </div>
     </>
   );

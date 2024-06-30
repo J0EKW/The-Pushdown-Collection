@@ -8,6 +8,7 @@ import { Stack } from './Stack'
 import '../App.css';
 
 type OptionWrapperProps = {
+    onAlphabetUpdate: Function,
     colour: String
 }
 
@@ -38,7 +39,7 @@ export const OptionWrapper = (props: OptionWrapperProps) => {
                 <div id='optionsInternalWrapper' className={props.colour + ' slideLeft'}>
                     <Animation colour={props.colour}/>
                     <Automaton colour={props.colour}/>
-                    <Input colour={props.colour}/>
+                    <Input onAlphabetUpdate={(id: string, char: string, index: number) => {props.onAlphabetUpdate(id, char, index)}} colour={props.colour}/>
                     <Stack colour={props.colour}/>
                     <Visual colour={props.colour}/>
                     <h1 className={props.colour + ' optionFooter'}/>
