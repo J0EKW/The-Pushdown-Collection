@@ -143,7 +143,7 @@ export const updateInputHead = (id: number, value: number, transitions: Transiti
   return transitions
 }
 
-export const add = (transitions: Transition[], states: State[], stackCountMax: number, connections: Connection[], cStateId : number=0, cInput : string="0", cStack : string[]=["Z", "Z"], nStateId : number=0, nStack : string[]=["Z", "Z"], nInputHead : number=1): {states: State[], transitions: Transition[], connections: Connection[]} => {
+export const add = (transitions: Transition[], states: State[], stackCountMax: number, connections: Connection[], cStateId : number=0, cInput : string="", cStack : string[]=["Z", "Z"], nStateId : number=0, nStack : string[]=["Z", "Z"], nInputHead : number=1): {states: State[], transitions: Transition[], connections: Connection[]} => {
   
   if (states.length === 0) {
     states.push({id: 0, name: 'q0', initial: false, accepting: false, alternating: false, x: 0, y: 0})

@@ -9,6 +9,7 @@ type CMTransitionProps = {
     transition: Transition,
     cState: string,
     nState: string,
+    alphabet: {[id: string]: string[]},
     onRemove: Function,
     onCInputUpdate: Function,
     onCStateUpdate: Function,
@@ -28,9 +29,8 @@ export const CMTransition = (props: CMTransitionProps) => {
     const options = useContext(OptionContext)
 
     const handleCInput= (e: any) => {
-        if (e.key === 'Enter') {
-            props.onCInputUpdate(props.transition.id, cInput)
-        }
+        props.onCInputUpdate(props.transition.id, e)
+        setCInput(e)
     }
 
     const handleCState = (e: any) => {
@@ -80,7 +80,14 @@ export const CMTransition = (props: CMTransitionProps) => {
     return (
         <div id='contextMenu' className={props.colour + ' contextMenu reveal'} style={{left: props.left, top: props.top}} >
             <div className={props.colour + ' contextMenuLabel'}>cState <input className={props.colour + ' contextMenuInput'} type='text' value={cState} onChange={(e) => setCState(e.currentTarget.value)} onKeyDown={(e) => handleCState(e)}/></div>
-            <div className={props.colour + ' contextMenuLabel'}>cInput <input className={props.colour + ' contextMenuInput'} type='text' value={cInput} maxLength={1} onChange={(e) => setCInput(e.currentTarget.value)} onKeyDown={(e) => handleCInput(e)}/></div>
+            <div className={props.colour + ' contextMenuLabel'}>
+                cInput 
+                <select className={props.colour + ' contextMenuInput'} value={cInput} onChange={(e) => handleCInput(e.currentTarget.value)} >
+                    {props.alphabet['allChar'].map((x, i) => {return(
+                        <option key={i} value={x}>{x}</option>
+                    )})}
+                </select>
+            </div>
             {props.transition.cStack.map((x, i) => {
                 if (i < options['stackCount'].value) {
                     return(<div key={i} className={props.colour + ' contextMenuLabel'}>{'cStack ' + String(i + 1)} <input className='contextMenuInput' type='text' value={cStack[i]}  maxLength={1} onChange={(e) => updateCStack(e.currentTarget.value, i)} onKeyDown={(e) => handleCStack(e, i)}/></div>)

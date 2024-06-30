@@ -30,10 +30,8 @@ export default function TransitionComponent(props: TransitionProps) {
     const options = useContext(OptionContext)
 
     const handleCInput= (e: any) => {
-        if (e.key === 'Enter') {
-            props.onCInputUpdate(transition.id, cInput)
-            setCInput(props.transition.cInput)
-        }
+        props.onCInputUpdate(transition.id, e)
+        setCInput(e)
     }
 
     const handleCState = (e: any) => {
@@ -94,7 +92,7 @@ export default function TransitionComponent(props: TransitionProps) {
     <div id={'transition' + transition.id} className={props.colour + ' transition show'}>
         <input id='removeTransition' title={'Remove transition'} type= 'submit' className={props.colour + ' remove'} value='&times;' onClick={() => {props.onRemove(transition.id)}}/>
         <input id='currentState' title={'State at start of transition'} type='input' className={props.colour + ' boxInput'} value={cState} onChange={(e) => setCState(e.currentTarget.value)} onKeyDown={(e) => handleCState(e)}/>
-        <select id='currentInput' title={'Input at start of transition'} className={props.colour + ' boxInput'} value={cInput} onChange={(e) => setCInput(e.currentTarget.value)} onKeyDown={(e) => handleCInput(e)}>
+        <select id='currentInput' title={'Input at start of transition'} className={props.colour + ' boxSelect'} value={cInput} onChange={(e) => handleCInput(e.currentTarget.value)} >
             {props.alphabet['allChar'].map((x, i) => {return(
                 <option key={i} value={x}>{x}</option>
             )})}

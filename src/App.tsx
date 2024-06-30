@@ -407,6 +407,7 @@ useEffect(() => {
           scale={scale}
           stackCount={options['stackCount'].value}
           interactMode={interactMode}
+          alphabet={alphabet}
           onStatePosUpdate={(id: number, x: number, y: number) => {clientGuiUpdateStatePos(id, x, y)}}
           onScaleUpdate={(value: number) => {setScale(value)}}
           onPosUpdate={(value: {x: number, y: number}) => setPos(value)}
