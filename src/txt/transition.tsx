@@ -10,6 +10,7 @@ type TransitionProps = {
     nState: string,
     colour: string,
     stackCount: number,
+    alphabet: {[id: string]: string[]},
     onRemove: Function,
     onCInputUpdate: Function,
     onCStateUpdate: Function,
@@ -29,9 +30,9 @@ export default function TransitionComponent(props: TransitionProps) {
     const options = useContext(OptionContext)
 
     const handleCInput= (e: any) => {
-        if (e.key === 'Enter') {
-            props.onCInputUpdate(transition.id, cInput)
-            setCInput(props.transition.cInput)
+        if (e !== '') {
+            props.onCInputUpdate(transition.id, e)
+            setCInput(e)
         }
     }
 
@@ -93,7 +94,12 @@ export default function TransitionComponent(props: TransitionProps) {
     <div id={'transition' + transition.id} className={props.colour + ' transition show'}>
         <input id='removeTransition' title={'Remove transition'} type= 'submit' className={props.colour + ' remove'} value='&times;' onClick={() => {props.onRemove(transition.id)}}/>
         <input id='currentState' title={'State at start of transition'} type='input' className={props.colour + ' boxInput'} value={cState} onChange={(e) => setCState(e.currentTarget.value)} onKeyDown={(e) => handleCState(e)}/>
-        <input id='currentInput' title={'Input at start of transition'} type='input' className={props.colour + ' boxInput'} value={cInput} maxLength={1} onChange={(e) => setCInput(e.currentTarget.value)} onKeyDown={(e) => handleCInput(e)}/>
+        <select id='currentInput' title={'Input at start of transition'} className={props.colour + ' boxSelect'} value={cInput} onChange={(e) => handleCInput(e.currentTarget.value)} >
+            <option key={-1} value={''}></option>
+            {props.alphabet['allChar'].map((x, i) => {return(
+                <option key={i} value={x}>{x}</option>
+            )})}
+        </select>
         {cStack.map((x, i) => {
             if (i < props.stackCount) {
                 return (<input key={i} id={'currentStack' + i} title={'Popped Value of Stack ' + Number(i + 1) + ' at start of transition'} type='input' className={props.colour + ' boxInput'} value={x}  maxLength={1} onChange={(e) => updateCStack(e.currentTarget.value, i)} onKeyDown={(e) => handleCStack(e, i)}/>)

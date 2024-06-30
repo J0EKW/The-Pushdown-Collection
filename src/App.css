@@ -101,6 +101,11 @@
   background-color: var(--back-colour-primary-2)
 }
 
+.bookendWrapper {
+  display: flex;
+  flex-flow: row;
+}
+
 .simState {
   display: flex;
   flex-flow: column;
@@ -336,14 +341,14 @@
   position: absolute;
   display: flex;
   flex-direction: row;
-  height: calc(100vh - 150px);
+  height: calc(100vh - 196px);
 }
 
 #optionsWrapper {
   position: absolute;
   display: flex;
   flex-direction: row;
-  height: calc(100vh - 150px);
+  height: calc(100vh - 196px);
   right: 0;
 }
 
@@ -376,6 +381,7 @@
   height: 25px;
   transition-duration: 0.2s;
   margin: 1%;
+  text-align: center;
 }
 
 .textInput {
@@ -428,10 +434,25 @@
   vertical-align: middle;
 }
 
-.txtTransitionsWrapper, .txtStatesWrapper {
+.charAdd {
+  padding: 0%;
+  margin: 1%;
+  width: 25px;
+  height: 25px;
+  border-color: transparent;
+  color: var(--text-colour-secondary);
+  background-color: transparent;
+  transition-duration: 0.2s;
+  font-weight: 700;
+  font-size: large;
+  text-align: center;
+  vertical-align: top;
+}
+
+.txtTransitionsWrapper, .txtStatesWrapper, #txtAlphabetWrapper {
   position: relative;
   width: 300px;
-  height: 50%;
+  height: 34%;
   border-bottom: solid;
   border-left: solid;
   border-right: solid;
@@ -484,11 +505,8 @@
   background-color: var(--back-colour-primary-1);
 }
 
-.transition {
+.txtState, .transition {
   border-radius: 25px;
-  border-style: solid;
-  border-width: 1px;
-  border-color: var(--border-colour);
   margin: 5px;
   height: 31px;
   opacity: 1;
@@ -497,15 +515,27 @@
   transition: all 0.2s ease-in;
 }
 
-.txtState {
+.alphabet {
   border-radius: 25px;
-  border-style: solid;
-  border-width: 1px;
-  border-color: transparent;
   margin: 5px;
-  height: 31px;
+  padding: 10px;
   opacity: 1;
   background-color: var(--back-colour-secondary);
+  color: var(--text-colour-secondary);
+  text-align: left;
+  height: 30px;
+  line-height: 30px;
+  vertical-align: middle;
+  transition: all 0.2s ease-in;
+}
+
+.bookendInput {
+  border-radius: 25px;
+  margin: 5px;
+  width: 50%;
+  opacity: 1;
+  background-color: var(--back-colour-secondary);
+  color: var(--text-colour-secondary);
   vertical-align: middle;
   transition: all 0.2s ease-in;
 }
@@ -554,7 +584,7 @@
   white-space: nowrap;
 }
 
-.txtTransitionHeader, .txtStatesHeader {
+.txtTransitionHeader, .txtStatesHeader, .txtAlphabetHeader {
   text-align: left;
   padding: 0;
   margin: 10px;

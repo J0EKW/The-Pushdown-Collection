@@ -47,7 +47,7 @@ export const remove = (id: number, transitions: Transition[], states: State[], c
     return {states: states, transitions: transitions, connections: connections}
 }
 
-export const updateInput = (id: number, value: string, transitions: Transition[], deterministic: boolean): Transition[] => {
+export const updateInput = (id: number, value: string, transitions: Transition[], deterministic: boolean, alphabet: {[id: string]: string[]}): Transition[] => {
   let index = transitions.findIndex(t => t.id === id)
   
   if (index === -1) {
@@ -59,8 +59,17 @@ export const updateInput = (id: number, value: string, transitions: Transition[]
     if (deterministic && findDuplicateTransition(transitions[index], transitions).length > 0) {
       transitions[index].cInput = oldVal
     }
+    
+    if (alphabet['callChar'].indexOf(value) !== -1) {
+      transitions[index].nStack = Array(2).fill(value + transitions[index].cStack[0])
+    } else if (alphabet['returnChar'].indexOf(value) !== -1) {
+      transitions[index].nStack = Array(2).fill('')
+      console.log("return")
+    } else if (alphabet['internalChar'].indexOf(value) !== -1) {
+      transitions[index].nStack = Array(2).fill(value)
+    }
   }
-  
+  console.log(transitions[index])
   return transitions
 }
 
@@ -143,7 +152,7 @@ export const updateInputHead = (id: number, value: number, transitions: Transiti
   return transitions
 }
 
-export const add = (transitions: Transition[], states: State[], stackCountMax: number, connections: Connection[], cStateId : number=0, cInput : string="0", cStack : string[]=["Z", "Z"], nStateId : number=0, nStack : string[]=["Z", "Z"], nInputHead : number=1): {states: State[], transitions: Transition[], connections: Connection[]} => {
+export const add = (transitions: Transition[], states: State[], stackCountMax: number, connections: Connection[], cStateId : number=0, cInput : string="", cStack : string[]=["Z", "Z"], nStateId : number=0, nStack : string[]=["Z", "Z"], nInputHead : number=1): {states: State[], transitions: Transition[], connections: Connection[]} => {
   
   if (states.length === 0) {
     states.push({id: 0, name: 'q0', initial: false, accepting: false, alternating: false, x: 0, y: 0})

@@ -8,6 +8,7 @@ type TransitionsProps = {
     transitions: Transition[],
     states: State[],
     stackCount: number,
+    alphabet: {[id: string]: string[]},
     colour: string,
     onRemove: Function,
     onCInputUpdate: Function,
@@ -57,6 +58,7 @@ export const Transitions = (props: TransitionsProps) => {
             nState={nState}
             colour={props.colour}
             stackCount={props.stackCount}
+            alphabet={props.alphabet}
             onRemove={(id: number) => {removeTransition(id)}}
             onCInputUpdate={(id: number, value: string) => {props.onCInputUpdate(id, value)}}
             onCStateUpdate={(id: number, name: string) => {props.onCStateUpdate(id, name)}}

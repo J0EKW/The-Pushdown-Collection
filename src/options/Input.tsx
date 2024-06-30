@@ -3,6 +3,7 @@ import '../App.css';
 import { OptionContext, OptionDispatchContext } from "../lib/OptionsContext";
 
 type InputProps = {
+    onAlphabetUpdate: Function,
     colour: String
 }
 
@@ -12,9 +13,6 @@ export const Input = (props: InputProps) => {
     const [to, setTo] = useState<NodeJS.Timeout>()
     const options = useContext(OptionContext)
     const dispatch = useContext(OptionDispatchContext)
-
-    const [fChar, setFChar] = useState<string>(options['inputFrontChar'].value)
-    const [eChar, setEChar] = useState<string>(options['inputEndChar'].value)
 
     const updateVisiblity = () => {
         if (!collapse) {
@@ -32,28 +30,16 @@ export const Input = (props: InputProps) => {
         setCollapse(!collapse)
     }
 
-    const handleInputFrontChar = (e: any) => {
-        if (e.key === 'Enter') {
-          
-            dispatch({
-                type: 'set',
-                id: 'inputFrontChar',
-                value: fChar
-            })
-        }
-    }
-
-    const handleInputEndChar = (e: any) => {
-        if (e.key === 'Enter') {
-            dispatch({
-                type: 'set',
-                id: 'inputEndChar',
-                value: eChar
-            })
-        }
-    }
-
     const handleBookendInput = () => {
+        
+        if (options['bookendInput'].value) {
+            props.onAlphabetUpdate('startChar', '', 0)
+            props.onAlphabetUpdate('endChar', '', 0)
+        } else {
+            props.onAlphabetUpdate('startChar', '[', -1)
+            props.onAlphabetUpdate('endChar', ']', -1)
+        }
+        
         dispatch({
             type: 'set',
             id: 'bookendInput',
@@ -68,12 +54,6 @@ export const Input = (props: InputProps) => {
             <div id='inputOptionList' className={props.colour + ' options close'}>
                 <div id='bookendWrapper'>
                     Bookend Input <input type='checkbox' checked={options['bookendInput'].value} onClick={handleBookendInput} />
-                </div>
-                <div id='frontCharWrapper'>
-                    Front Char <input className={props.colour + ' optionsBoxInput'} type='text' max={1} value={fChar} onChange={(x) => {setFChar(x.currentTarget.value)}} onKeyDown={(e) => handleInputFrontChar(e)}/>
-                </div>
-                <div id='endCharWrapper'>
-                    End Char <input className={props.colour + ' optionsBoxInput'} type='text' max={1} value={eChar} onChange={(x) => {setEChar(x.currentTarget.value)}} onKeyDown={(e) => handleInputEndChar(e)}/>
                 </div>
             </div>}
         </div>

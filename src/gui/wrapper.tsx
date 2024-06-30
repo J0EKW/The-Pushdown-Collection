@@ -18,6 +18,7 @@ type GuiWrapperProps = {
     stackCount: number,
     scale: number,
     interactMode: number,
+    alphabet: {[id: string]: string[]},
     onStatePosUpdate: Function,
     onScaleUpdate: Function,
     onPosUpdate: Function,
@@ -247,7 +248,7 @@ export const GuiWrapper = (props: GuiWrapperProps) => {
       let contextMenu = 1
       for (let index = 0; index < states.length; index++) {
         const state = states[index];
-        if (isPointInBox({x: evt.clientX, y: evt.clientY}, 'guiState' + state.id, boundary)) {
+        if (isPointInBox({x: evt.clientX, y: evt.clientY}, 'guiState' + state.id, boundary * scale)) {
           contextMenu = 2
           setCMState(state)
           break;
@@ -349,6 +350,7 @@ export const GuiWrapper = (props: GuiWrapperProps) => {
             transition={cmTransition}
             cState={states.find(s => s.id === cmTransition.cStateId)?.name ?? ''}
             nState={states.find(s => s.id === cmTransition.nStateId)?.name ?? ''}
+            alphabet={props.alphabet}
             onRemove={(id: number) => {props.onRemoveTransition(id)}}
             onCInputUpdate={(id: number, value: string) => {props.onCInputUpdate(id, value)}}
             onCStateUpdate={(id: number, name: string) => {props.onCStateUpdate(id, name)}}

@@ -1,13 +1,15 @@
 import React, { useState } from 'react'
 import { Transitions } from './transitions'
-import { State, Transition } from '../types'
+import { Alphabet as AlphabetType, State, Transition } from '../types'
 import { States } from './states'
+import { Alphabet } from './alphabet'
 
 type WrapperProps = {
     transitions: Transition[],
     states: State[],
     stackCount: number,
     colour: string,
+    alphabet: {[id: string]: string[]},
     onRemoveTransition: Function,
     onCInputUpdate: Function,
     onCStateUpdate: Function,
@@ -21,12 +23,14 @@ type WrapperProps = {
     onInitUpdate: Function,
     onAcceptUpdate: Function,
     onAlternateUpdate: Function,
-    onAddState: Function
+    onAddState: Function,
+    onAlphabetUpdate: Function
 }
 
 export const Wrapper = (props: WrapperProps) => {
     let transitions = props.transitions
     let states = props.states
+    let alphabet = props.alphabet
 
     const [visible, setVisible] = useState<boolean>(true)
     const [render, setRender] = useState<boolean>(true)
@@ -51,6 +55,7 @@ export const Wrapper = (props: WrapperProps) => {
                 transitions={transitions}
                 states={states}
                 stackCount={props.stackCount}
+                alphabet={alphabet}
                 colour={props.colour}
                 onRemove={(id: number) => {props.onRemoveTransition(id)}}
                 onCInputUpdate={(id: number, value: string) => {props.onCInputUpdate(id, value)}}
@@ -70,6 +75,11 @@ export const Wrapper = (props: WrapperProps) => {
                 onAcceptUpdate={(id: number, value: boolean) => {props.onAcceptUpdate(id, value)}}
                 onAlternateUpdate={(id: number, value: boolean) => {props.onAlternateUpdate(id, value)}}
                 onAdd={() => {props.onAddState()}}
+                />
+                <Alphabet 
+                colour={props.colour}
+                alphabet={alphabet}
+                onAlphabetUpdate={(id: string, char: string, index: number) => {props.onAlphabetUpdate(id, char, index)}}
                 />
                 </div>
             ) : (<></>)

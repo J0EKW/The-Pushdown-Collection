@@ -1,6 +1,6 @@
 import React, { useEffect, useReducer, useState } from 'react';
 import './App.css';
-import { Connection, State, Transition, Traversal } from './types';
+import { Alphabet, Connection, State, Transition, Traversal } from './types';
 import { Wrapper as TxtWrapper } from './txt/wrapper';
 import { Wrapper as SimWrapper } from './sim/wrapper';
 import { add as tAdd, remove as tRemove, updateState, updateInputHead, updateStack, updateInput, findDuplicateTransition, findInvalidAlphabetUse } from './lib/transitions';
@@ -12,7 +12,9 @@ import { MotionPathPlugin } from "gsap/MotionPathPlugin";
 import { OptionWrapper } from './options/Wrapper';
 import DefaultOptions from './lib/DefaultOptions';
 import optionsReducer from './lib/OptionsReducer';
-import { OptionContext, OptionDispatchContext } from './lib/OptionsContext';
+import { OptionContext, OptionDispatchContext, AlphabetContext, AlphabetDispatchContext } from './lib/OptionsContext';
+import alphabetReducer from './lib/AlphabetReducer';
+import DefaultAlphabet from './lib/DefaultAlphabet';
 gsap.registerPlugin(MotionPathPlugin);
 
 
@@ -32,7 +34,10 @@ function App() {
   const [defaultTraversal, setDefaultTraversal] = useState<Traversal>({id: 0, history: [-1], stateId: 0, transitionId: -1, stack: stacks, inputHead: options['bookendInput'].value ? 1 : 0, end: 0})
   const [traversal, setTraversal] = useState<Traversal[]>([defaultTraversal])
   const [colour, setColour] = useState<string>('light')
+
+  //const [alphabet, setAlphabet] = useState<Alphabet>({startChar:'S', endChar:'E', callChars:[], returnChars:[], internalChars:[], miscChars:['0', '1'], allChars:['S', 'E', '0', '1']})
   
+  const [alphabet, alphabetDispatch] = useReducer(alphabetReducer, DefaultAlphabet)
   const stackCountMax = 2
 
   const arrayEqual = (a: any[], b: any[]): boolean => {
@@ -74,7 +79,7 @@ function App() {
   }
 
   const clientUpdateCInput = (transitionId: number, cInput: string) => {
-    let newTransitions = updateInput(transitionId, cInput, [...transitions], options['forceDeterministic'].value)
+    let newTransitions = updateInput(transitionId, cInput, [...transitions], options['forceDeterministic'].value, alphabet)
     setTransitions(newTransitions)
   }
 
@@ -116,8 +121,6 @@ function App() {
 
   const clientAddGuiTransition = (cState: State, nState: State) => {
     let newPA = tAdd([...transitions], [...states], stackCountMax, [...connections], cState.id, undefined, undefined, nState.id)
-    /* newPA = updateState(newPA.transitions[newPA.transitions.length - 1].id, cState.name, true, [...newPA.transitions], [...newPA.states], [...newPA.connections], options['forceDeterministic'].value) */
-    /* newPA = updateState(newPA.transitions[newPA.transitions.length - 1].id, nState.name, false, [...newPA.transitions], [...newPA.states], [...newPA.connections], options['forceDeterministic'].value) */
 
     setTransitions(newPA.transitions)
     setStates(newPA.states)
@@ -169,6 +172,24 @@ function App() {
     let newStates = sAdd([...states])
     newStates = updatePosition(newStates[newStates.length - 1].id, x, y, [...newStates])
     setStates(newStates)
+  }
+
+  const clientAlphabetUpdate = (id: string, char: string, index: number) => {
+    let typeParam = 'update'
+    if (index === -1) {
+      typeParam = 'add'
+    } else if (index === -2) {
+      typeParam = 'empty'
+    } else if (char.length === 0) {
+      typeParam = 'remove'
+    }
+    console.log(alphabet)
+    alphabetDispatch({
+      type: typeParam,
+      id: id,
+      params: { char, index }
+    })
+    console.log(alphabet)
   }
 
   const clientSimRun = () => {
@@ -388,6 +409,7 @@ useEffect(() => {
           scale={scale}
           stackCount={options['stackCount'].value}
           interactMode={interactMode}
+          alphabet={alphabet}
           onStatePosUpdate={(id: number, x: number, y: number) => {clientGuiUpdateStatePos(id, x, y)}}
           onScaleUpdate={(value: number) => {setScale(value)}}
           onPosUpdate={(value: {x: number, y: number}) => setPos(value)}
@@ -412,6 +434,7 @@ useEffect(() => {
           states={states}
           stackCount={options['stackCount'].value}
           colour={colour}
+          alphabet={alphabet}
           onRemoveTransition={(id: number) => {clientRemoveTransition(id)}}
           onCInputUpdate={(id: number, value: string) => {clientUpdateCInput(id, value)}}
           onCStateUpdate={(id: number, name: string) => {clientUpdateCState(id, name)}}
@@ -425,25 +448,28 @@ useEffect(() => {
           onInitUpdate={(id: number, value: boolean) => {clientUpdateInit(id, value)}}
           onAcceptUpdate={(id: number, value: boolean) => {clientUpdateAccepting(id, value)}}
           onAlternateUpdate={(id: number, value: boolean) => {clientUpdateAlternating(id, value)}}
-          onAddState={() => {clientAddState()}}/>
-            <OptionWrapper
-              colour={colour}
-            />
-            <SimWrapper
-              colour={colour}
-              input={input}
-              stacks={stacks}
-              currentTraversals={currentTraversal}
-              states={states}
-              haltCond={options['haltCondition'].value}
-              onInputUpdate={(value: string) => {setInput(value)}}
-              onRun={() => {clientSimRun()}}
-              onStep={() => {clientSimStep()}}
-              onReset={() => {reset()}}
-              setSelected={(value: number) => {setSelectedTraversal(value)}}
-            />
-          </OptionDispatchContext.Provider>
-        </OptionContext.Provider>
+          onAddState={() => {clientAddState()}}
+          onAlphabetUpdate={(id: string, char: string, index: number) => {clientAlphabetUpdate(id, char, index)}}/>
+      <OptionWrapper
+        onAlphabetUpdate={(id: string, char: string, index: number) => {clientAlphabetUpdate(id, char, index)}}
+        colour={colour}
+      />
+      <SimWrapper
+        colour={colour}
+        input={input}
+        stacks={stacks}
+        currentTraversals={currentTraversal}
+        states={states}
+        haltCond={options['haltCondition'].value}
+        alphabet={alphabet}
+        onInputUpdate={(value: string) => {setInput(value)}}
+        onRun={() => {clientSimRun()}}
+        onStep={() => {clientSimStep()}}
+        onReset={() => {reset()}}
+        setSelected={(value: number) => {setSelectedTraversal(value)}}
+      />
+      </OptionDispatchContext.Provider>
+      </OptionContext.Provider>
     </div>
     </>
   );
