@@ -79,7 +79,7 @@ function App() {
   }
 
   const clientUpdateCInput = (transitionId: number, cInput: string) => {
-    let newTransitions = updateInput(transitionId, cInput, [...transitions], options['forceDeterministic'].value)
+    let newTransitions = updateInput(transitionId, cInput, [...transitions], options['forceDeterministic'].value, alphabet)
     setTransitions(newTransitions)
   }
 
@@ -121,8 +121,6 @@ function App() {
 
   const clientAddGuiTransition = (cState: State, nState: State) => {
     let newPA = tAdd([...transitions], [...states], stackCountMax, [...connections], cState.id, undefined, undefined, nState.id)
-    /* newPA = updateState(newPA.transitions[newPA.transitions.length - 1].id, cState.name, true, [...newPA.transitions], [...newPA.states], [...newPA.connections], options['forceDeterministic'].value) */
-    /* newPA = updateState(newPA.transitions[newPA.transitions.length - 1].id, nState.name, false, [...newPA.transitions], [...newPA.states], [...newPA.connections], options['forceDeterministic'].value) */
 
     setTransitions(newPA.transitions)
     setStates(newPA.states)
@@ -180,6 +178,8 @@ function App() {
     let typeParam = 'update'
     if (index === -1) {
       typeParam = 'add'
+    } else if (index === -2) {
+      typeParam = 'empty'
     } else if (char.length === 0) {
       typeParam = 'remove'
     }

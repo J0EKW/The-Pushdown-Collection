@@ -6,6 +6,6 @@ DefaultAlphabet['miscChar'] = []
 DefaultAlphabet['callChar'] = []
 DefaultAlphabet['returnChar'] = []
 DefaultAlphabet['internalChar'] = []
-DefaultAlphabet['allChar'] = ['']
+DefaultAlphabet['allChar'] = []
 
 export default DefaultAlphabet

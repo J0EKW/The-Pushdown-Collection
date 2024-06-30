@@ -47,7 +47,7 @@ export const remove = (id: number, transitions: Transition[], states: State[], c
     return {states: states, transitions: transitions, connections: connections}
 }
 
-export const updateInput = (id: number, value: string, transitions: Transition[], deterministic: boolean): Transition[] => {
+export const updateInput = (id: number, value: string, transitions: Transition[], deterministic: boolean, alphabet: {[id: string]: string[]}): Transition[] => {
   let index = transitions.findIndex(t => t.id === id)
   
   if (index === -1) {
@@ -59,8 +59,17 @@ export const updateInput = (id: number, value: string, transitions: Transition[]
     if (deterministic && findDuplicateTransition(transitions[index], transitions).length > 0) {
       transitions[index].cInput = oldVal
     }
+    
+    if (alphabet['callChar'].indexOf(value) !== -1) {
+      transitions[index].nStack = Array(2).fill(value + transitions[index].cStack[0])
+    } else if (alphabet['returnChar'].indexOf(value) !== -1) {
+      transitions[index].nStack = Array(2).fill('')
+      console.log("return")
+    } else if (alphabet['internalChar'].indexOf(value) !== -1) {
+      transitions[index].nStack = Array(2).fill(value)
+    }
   }
-  
+  console.log(transitions[index])
   return transitions
 }
 

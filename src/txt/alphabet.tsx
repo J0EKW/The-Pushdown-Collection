@@ -17,7 +17,7 @@ export const Alphabet = (props: AlphabetProps) => {
     
 
     const addChar = (id: string) => {
-        props.onAlphabetUpdate(id, '', -1)
+        props.onAlphabetUpdate(id, '#', -1)
     }
 
     return (

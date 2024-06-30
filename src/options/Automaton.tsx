@@ -3,6 +3,7 @@ import '../App.css';
 import { OptionContext, OptionDispatchContext } from "../lib/OptionsContext";
 
 type AutomatonProps = {
+    onAlphabetUpdate: Function,
     colour: String
 }
 
@@ -46,6 +47,15 @@ export const Automaton = (props: AutomatonProps) => {
     }
 
     const handleForceVisibly = () => {
+
+        if (options['forceVisibly'].value) {
+            props.onAlphabetUpdate('callChar', '', -2)
+            props.onAlphabetUpdate('returnChar', '', -2)
+            props.onAlphabetUpdate('internalChar', '', -2)
+        } else {
+            props.onAlphabetUpdate('miscChar', '', -2)
+        }
+
         dispatch({
             type: 'set',
             id: 'forceVisibly',

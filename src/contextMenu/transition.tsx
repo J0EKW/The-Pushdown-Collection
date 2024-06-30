@@ -29,8 +29,10 @@ export const CMTransition = (props: CMTransitionProps) => {
     const options = useContext(OptionContext)
 
     const handleCInput= (e: any) => {
-        props.onCInputUpdate(props.transition.id, e)
-        setCInput(e)
+        if (e !== '') {
+            props.onCInputUpdate(props.transition.id, e)
+            setCInput(e)
+        }
     }
 
     const handleCState = (e: any) => {
@@ -83,6 +85,7 @@ export const CMTransition = (props: CMTransitionProps) => {
             <div className={props.colour + ' contextMenuLabel'}>
                 cInput 
                 <select className={props.colour + ' contextMenuInput'} value={cInput} onChange={(e) => handleCInput(e.currentTarget.value)} >
+                    <option key={-1} value={''}></option>
                     {props.alphabet['allChar'].map((x, i) => {return(
                         <option key={i} value={x}>{x}</option>
                     )})}
