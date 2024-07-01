@@ -398,7 +398,7 @@ useEffect(() => {
 
   return (
     <>
-     <div id="header" className={colour + " header"}>The Pushdown Collection - v0.1.0 - <a href="https://github.com/J0EKW/the-pushdown-collection">repo</a></div>
+     <div id="header" className={colour + " header"}>The Pushdown Collection - v0.1.1 - <a href="https://github.com/J0EKW/the-pushdown-collection">repo</a></div>
     <div className="App">
       <OptionContext.Provider value={options} >
       <OptionDispatchContext.Provider value={optionsDispatch} >
